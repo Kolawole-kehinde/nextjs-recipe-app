@@ -108,7 +108,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
     >
       {children}
     </AppContext.Provider>
-  );
+  );h
 };
 
 export default AppContextProvider;

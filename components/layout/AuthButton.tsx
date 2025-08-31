@@ -25,7 +25,7 @@ const AuthButton = () => {
     <div className="relative text-black">
       <button
         onClick={toggleMenu}
-        className="flex items-center cursor-pointer hover:text-primary"
+        className="flex items-center cursor-pointer hover:text-[#FF3D00]"
       >
         {user?.avatar ? (
           <img
