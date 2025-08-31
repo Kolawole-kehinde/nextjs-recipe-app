@@ -31,4 +31,12 @@ export const menu_list = [
     menu_name: "Noodles",
     menu_image: "/images/menu_8.png",
   },
+   {
+    menu_name: "Sandwich",
+    menu_image: "/images/menu_4.png",
+  },
+    {
+    menu_name: "Rolls",
+    menu_image: "/images/menu_2.png",
+  },
 ];
