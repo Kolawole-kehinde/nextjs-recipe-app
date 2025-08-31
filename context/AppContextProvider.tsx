@@ -1,4 +1,3 @@
-// context/AppContextProvider.tsx
 "use client";
 
 import {
@@ -14,13 +13,12 @@ import toast from "react-hot-toast";
 import LocalStorageService from "@/utils/localStorage";
 import { createClient } from "@/utils/supabase/client";
 
-
-
-// Types
 interface Product {
-  id: string;
+  id: string | number;
   name: string;
   price: number;
+  image_url: string;
+  description: string;
   [key: string]: any;
 }
 
@@ -32,7 +30,8 @@ interface AppContextType {
   loading: boolean;
 }
 
-export const AppContext = createContext<AppContextType | undefined>(undefined);
+export const AppContext = createContext<AppContextType | undefined>(undefined); // ✅ named export
+
 const supabase = createClient();
 
 const AppContextProvider = ({ children }: { children: ReactNode }) => {
@@ -45,23 +44,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Persist user in localStorage
-  useEffect(() => {
-    if (user) setItem("auth", user);
-  }, [user, setItem]);
-
-  // Sync auth state with Supabase
-  useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  // Fetch products from Supabase
+  // Fetch products
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -74,11 +57,9 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
       }
       setLoading(false);
     };
-
     fetchProducts();
   }, []);
 
-  // Logout
   const handleLogout = useCallback(async () => {
     setLoading(true);
     try {
@@ -97,26 +78,17 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
   }, [router, clear]);
 
   return (
-    <AppContext.Provider
-      value={{
-        user,
-        setUser,
-        products,
-        handleLogout,
-        loading,
-      }}
-    >
+    <AppContext.Provider value={{ user, setUser, products, handleLogout, loading }}>
       {children}
     </AppContext.Provider>
-  );h
+  );
 };
 
-export default AppContextProvider;
+export default AppContextProvider; // ✅ default export
 
-// ✅ Helper hook
+// ✅ custom hook
 export const useAppContext = () => {
   const ctx = useContext(AppContext);
-  if (!ctx)
-    throw new Error("useAppContext must be used within AppContextProvider");
+  if (!ctx) throw new Error("useAppContext must be used within AppContextProvider");
   return ctx;
 };
