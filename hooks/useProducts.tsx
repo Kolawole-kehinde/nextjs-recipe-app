@@ -1,17 +1,33 @@
 "use client";
 
+import api from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
-import { createClient } from "@/utils/supabase/client";
+import toast from "react-hot-toast";
 
 export const useProducts = () => {
   return useQuery({
     queryKey: ["products"],
     queryFn: async () => {
-      const supabase = createClient();
-      const { data, error } = await supabase.from("products").select("*");
+      try {
+        const response = await api.get("/products");
+        console.log("API raw response:", response.data);
 
-      if (error) throw new Error(error.message);
-      return data ?? [];
+        // Ensure it's always an array
+        if (Array.isArray(response.data)) {
+          return response.data;
+        }
+
+        // If API returns { data: [...] }
+        if (response.data?.data && Array.isArray(response.data.data)) {
+          return response.data.data;
+        }
+
+        return [];
+      } catch (err: any) {
+        console.error("API fetch error:", err);
+        toast.error(err.response?.data?.error || "❌ Failed to fetch products");
+        throw err;
+      }
     },
   });
 };

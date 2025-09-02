@@ -5,6 +5,7 @@ import QueryProvider from "@/context/Provider";
 import { CartProvider } from "@/context/CartContext";
 import AppContextProvider from "@/context/AppContextProvider";
 import Navbar from "@/components/layout/NavBar";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +37,7 @@ export default function RootLayout({
             <CartProvider>
               <Navbar />
               <main className="wrapper">{children}</main>
+              <Toaster position="top-right" reverseOrder={false} />
             </CartProvider>
           </AppContextProvider>
         </QueryProvider>

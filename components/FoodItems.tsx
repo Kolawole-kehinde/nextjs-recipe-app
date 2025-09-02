@@ -15,11 +15,9 @@ type FoodItemProps = {
 };
 
 const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) => {
-  const { cartItems, addToCart, removeFromCart, toggleFavorite, isFavorite } =
-    useCartContext();
+  const { cartItems, addToCart, removeFromCart, toggleFavorite, isFavorite } = useCartContext();
 
   const stringId = String(id);
-
   const quantityInCart =
     cartItems.find((item) => item.id === stringId)?.quantity || 0;
 
@@ -54,12 +52,12 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
             className="w-full h-48 object-cover rounded-t-xl"
             width={500}
             height={300}
+            unoptimized={true} // ✅ allows external Supabase URLs
           />
         </Link>
 
         {/* Action icons */}
         <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center px-2">
-          {/* Favorite */}
           <Heart
             onClick={handleToggleFavorite}
             className={`text-xl cursor-pointer ${
@@ -69,7 +67,6 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
             } hover:stroke-red-600 transition`}
           />
 
-          {/* Cart */}
           {quantityInCart === 0 ? (
             <Plus
               onClick={handleAddToCart}

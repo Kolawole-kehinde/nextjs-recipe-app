@@ -1,11 +1,9 @@
-"use client"
-import { AppContext } from "@/context/AppContextProvider";
+"use client";
+
 import Link from "next/link";
-import { useContext } from "react";
 import SkeletonCard from "../SkeletonCard";
 import FoodItems from "../FoodItems";
-
-
+import { useProducts } from "@/hooks/useProducts";
 
 const TopDishes = ({
   category = "All",
@@ -15,32 +13,38 @@ const TopDishes = ({
   end = 8,
   showMoreButton = true,
 }) => {
-  const { products } = useContext(AppContext);
+  const { data: products, isLoading, error } = useProducts();
 
-  const isLoading = !products || products.length === 0;
+  console.log("Products in TopDishes:", products);
+  console.log("Is loading:", isLoading, "Error:", error);
+
+  const displayProducts = Array.isArray(products) ? products : [];
 
   const filteredList =
     category === "All"
-      ? products
-      : products.filter((item) => item.category === category);
+      ? displayProducts
+      : displayProducts.filter((item: any) => item.category === category);
 
   return (
     <div className="wrapper px-4 lg:px-0 py-6">
-       <div className="flex items-center justify-between">
-       <h2 className="text-2xl font-bold mb-6 text-start">{title}</h2>
-       <Link href="/all-dishes" className="text-primary">{subTitle}</Link>
-       </div>
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold mb-6 text-start">{title}</h2>
+        <Link href="/all-dishes" className="text-primary">
+          {subTitle}
+        </Link>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {isLoading
           ? Array.from({ length: end - start }).map((_, i) => (
               <SkeletonCard key={i} />
             ))
-          : filteredList.slice(start, end).map((item) => (
+          : filteredList.slice(start, end).map((item: any) => (
               <FoodItems key={item.id} {...item} />
             ))}
       </div>
 
-      {showMoreButton && !isLoading && (
+      {showMoreButton && !isLoading && filteredList.length > 0 && (
         <div className="text-center mt-6">
           <Link href="/all-dishes">
             <button className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-orange-600">

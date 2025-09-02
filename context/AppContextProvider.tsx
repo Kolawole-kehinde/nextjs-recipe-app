@@ -30,7 +30,7 @@ interface AppContextType {
   loading: boolean;
 }
 
-export const AppContext = createContext<AppContextType | undefined>(undefined); // ✅ named export
+export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const supabase = createClient();
 
@@ -84,9 +84,8 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default AppContextProvider; // ✅ default export
+export default AppContextProvider
 
-// ✅ custom hook
 export const useAppContext = () => {
   const ctx = useContext(AppContext);
   if (!ctx) throw new Error("useAppContext must be used within AppContextProvider");
