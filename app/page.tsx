@@ -8,7 +8,8 @@ import TopDishes from "@/components/LadingPage/TopDishes";
 import { useState } from "react";
 
 const LandingPage = () => {
-  const [category, setCategory] = useState<string>("");
+const [category, setCategory] = useState<string>("All");
+
 
   return (
      <main>
