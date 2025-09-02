@@ -6,6 +6,7 @@ import { CartProvider } from "@/context/CartContext";
 import AppContextProvider from "@/context/AppContextProvider";
 import Navbar from "@/components/layout/NavBar";
 import { Toaster } from "react-hot-toast";
+import Footer from "@/components/layout/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
             <CartProvider>
               <Navbar />
               <main className="">{children}</main>
+              <Footer />
               <Toaster position="top-right" reverseOrder={false} />
             </CartProvider>
           </AppContextProvider>
