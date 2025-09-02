@@ -5,14 +5,8 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { useCartContext } from "@/context/CartContext";
 import Image from "next/image";
+import { FoodItemProps } from "@/types/fooditems";
 
-type FoodItemProps = {
-  id: string | number;
-  name: string;
-  price: number;
-  image_url: string;
-  description: string;
-};
 
 const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) => {
   const { cartItems, addToCart, removeFromCart, toggleFavorite, isFavorite } = useCartContext();
@@ -28,18 +22,18 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
     if (added) {
       toast.success(`${name} added to favorites`);
     } else {
-      toast(`${name} removed from favorites`, { icon: "❌" });
+     
     }
   };
 
   const handleAddToCart = () => {
     addToCart(product);
-    toast.success(`${name} added to cart.`);
+   
   };
 
   const handleRemoveFromCart = () => {
     removeFromCart(stringId);
-    toast.success(`${name} removed from cart.`);
+   
   };
 
   return (
@@ -52,7 +46,7 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
             className="w-full h-48 object-cover rounded-t-xl"
             width={500}
             height={300}
-            unoptimized={true} // ✅ allows external Supabase URLs
+            unoptimized={true}
           />
         </Link>
 
@@ -71,20 +65,21 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
             <Plus
               onClick={handleAddToCart}
               className="text-primary text-xl cursor-pointer bg-white rounded-full p-1 hover:scale-110 transition"
-              title="Add to cart"
             />
           ) : (
             <div className="flex items-center gap-2 bg-white p-2 rounded-full shadow-md">
-              <Minus
+              <img
                 onClick={handleRemoveFromCart}
-                className="w-6 h-6 text-red-600 cursor-pointer hover:scale-110 transition"
-                title="Remove item"
+                src="/images/remove_icon_red.png"
+                alt="Remove item"
+                className="w-7 cursor-pointer"
               />
               <p className="text-sm font-medium">{quantityInCart}</p>
-              <Plus
+              <img
                 onClick={handleAddToCart}
-                className="w-6 h-6 text-green-600 cursor-pointer hover:scale-110 transition"
-                title="Add item"
+                src="/images/add_icon_green.png"
+                alt="Add item"
+                className="w-7 cursor-pointer"
               />
             </div>
           )}
