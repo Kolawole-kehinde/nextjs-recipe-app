@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const Showcase = () => {
   return (
-    <section className=" px-4 lg:px-0">
+    <section className="wrapper px-4 lg:px-0">
       <div
         className="w-full h-[300px] md:h-[400px] lg:h-[480px] 
              bg-showcase bg-center bg-cover bg-no-repeat 

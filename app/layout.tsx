@@ -36,7 +36,7 @@ export default function RootLayout({
           <AppContextProvider>
             <CartProvider>
               <Navbar />
-              <main className="wrapper">{children}</main>
+              <main className="">{children}</main>
               <Toaster position="top-right" reverseOrder={false} />
             </CartProvider>
           </AppContextProvider>

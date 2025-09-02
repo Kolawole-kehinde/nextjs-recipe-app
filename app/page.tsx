@@ -1,5 +1,6 @@
 "use client"
 
+import Banner from "@/components/LadingPage/Banner";
 import ExploreMenu from "@/components/LadingPage/ExploreMenu"
 import { RecommendedDishes } from "@/components/LadingPage/RecommendedDishes";
 import Showcase from "@/components/LadingPage/ShowCase"
@@ -20,6 +21,7 @@ const [category, setCategory] = useState<string>("All");
        <TopDishes category={category} />
        <RecommendedDishes/>
        <TopBanner/>
+       <Banner/>
      </main>
   )
 }
