@@ -21,7 +21,6 @@ const [category, setCategory] = useState<string>("All");
        <TopDishes category={category} />
        <RecommendedDishes/>
        <TopBanner/>
-       <Banner/>
      </main>
   )
 }
