@@ -18,6 +18,7 @@ export async function POST(req: Request) {
     if (loginError) {
          return NextResponse.json({ loginError: loginError.message }, { status: 401 });
     }
+    
 
     return NextResponse.json({ user }, { status: 200 });
 }
