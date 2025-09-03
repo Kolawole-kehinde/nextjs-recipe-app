@@ -8,7 +8,7 @@ import { createClient } from "@/utils/supabase/client";
 
 async function submitSuggestion(message: string) {
   const supabase = createClient();
-  const { error } = await (await supabase)
+  const { error } = await supabase
     .from("suggestions")
     .insert([{ message }]);
 
