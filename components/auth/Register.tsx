@@ -1,6 +1,4 @@
 "use client";
-
-import { z } from "zod";
 import { RegisterLists } from "@/constants/auth";
 import CustomInput from "../CutomInput";
 import CustomButton from "../CustomButton";
@@ -45,7 +43,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white px-4">
+    <div className="flex items-center justify-center min-h-screen bg-white px-4 lg:px-0 font-Primary">
       <div className="bg-white p-8 rounded-lg shadow-md w-[500px] space-y-6">
         <h1 className="text-2xl font-bold">Register Page</h1>
 

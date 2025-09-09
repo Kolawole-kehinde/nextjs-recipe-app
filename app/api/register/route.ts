@@ -1,5 +1,6 @@
-import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
 export async function POST(req: Request) {
   try {
@@ -13,47 +14,44 @@ export async function POST(req: Request) {
       );
     }
 
-    const supabase = await createClient();
+    const cookieStore = cookies();
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
-    // 1️⃣ Create user in Auth
+    // 1️⃣ Create user in Supabase Auth
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { name, gender },
+        data: { name, gender }, 
       },
     });
 
     if (error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    // 2️⃣ Insert into your "users" table 
-    if (data?.user) {
-      const { error: insertError } = await supabase
-        .from("users")
-        .insert([
-          {
-            user_id: data.user.id, // 🔑 auth user id goes here
-            name,
-            email,
-            gender,
-          },
-        ]);
+    const user = data.user;
+
+    // 2️⃣ Insert into your custom "users" table
+    if (user) {
+      const { error: insertError } = await supabase.from("users").insert([
+        {
+          id: user.id,
+          name,
+          email,
+          gender,
+          created_at: new Date().toISOString(),
+        },
+      ]);
 
       if (insertError) {
-        return NextResponse.json(
-          { error: insertError.message },
-          { status: 500 }
-        );
+        return NextResponse.json({ error: insertError.message }, { status: 500 });
       }
     }
 
+    // 3️⃣ Session persists automatically in cookies
     return NextResponse.json(
-      { message: "User registered successfully", user: data.user },
+      { message: "User registered successfully", user },
       { status: 200 }
     );
   } catch (err: any) {
