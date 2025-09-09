@@ -49,7 +49,10 @@ export async function POST(req: Request) {
     }
 
     // 3️⃣ Session automatically saved in cookies
-    return NextResponse.json({ user, session: data.session }, { status: 200 });
+    return NextResponse.json(
+      { user, session: data.session },
+      { status: 200 }
+    );
   } catch (err: any) {
     return NextResponse.json(
       { error: err.message || "Internal Server Error" },

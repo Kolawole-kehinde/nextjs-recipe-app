@@ -1,26 +1,19 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import toast from "react-hot-toast";
-import { useAuth } from "../../hooks/useAuth";
-import { useLogin } from "../../hooks/useLogin";
 import Link from "next/link";
 import CustomButton from "../CustomButton";
 import CustomInput from "../CutomInput";
 import { LoginLists } from "@/constants/auth";
 import { LoginSchema, LoginType } from "@/Schema/auth";
+import { useLogin } from "@/hooks/auth/useAuth";
 
 const LoginPage = () => {
-  const { setUser } = useAuth();
-  const router = useRouter();
-
   const {
     control,
     handleSubmit,
     reset,
-    formState: { errors },
   } = useForm<LoginType>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -33,15 +26,7 @@ const LoginPage = () => {
 
   const onSubmit = (data: LoginType) => {
     login(data, {
-      onSuccess: (res) => {
-        toast.success("User logged in successfully!");
-        setUser(res?.user);
-        reset();
-        router.push("/dashboard");
-      },
-      onError: (err: any) => {
-        toast.error(err?.response?.data?.loginError || "Login failed");
-      },
+      onSuccess: () => reset(),
     });
   };
 
@@ -52,15 +37,14 @@ const LoginPage = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {LoginLists?.map(({ name, type, placeholder }) => (
-            <div key={name} className="relative">
-              <CustomInput
-                name={name}
-                type={type}
-                placeholder={placeholder}
-                control={control}
-                label={name.charAt(0).toUpperCase() + name.slice(1)}
-              />
-            </div>
+            <CustomInput
+              key={name}
+              name={name}
+              type={type}
+              placeholder={placeholder}
+              control={control}
+              label={name.charAt(0).toUpperCase() + name.slice(1)}
+            />
           ))}
 
           <p className="text-sm text-right">
