@@ -1,13 +1,13 @@
 export const RegisterLists = [
     {
         type: "text",
-        name: "username",
-        placeholder: "Username"
+        name: "name",
+        placeholder: "enter Your Name"
     },
     {
         type: "email",
         name: "email",
-        placeholder: "Email"
+        placeholder: "enter Your Email"
     },
     {
         type: "select",

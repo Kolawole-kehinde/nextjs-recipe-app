@@ -2,9 +2,9 @@ import { z } from "zod";
 
 export const RegisterSchema = z
   .object({
-    username: z
+    name: z
       .string()
-      .min(3, "Username must be at least 3 characters long")
+      .min(3, "Name must be at least 3 characters long")
       .trim(),
 
     email: z
@@ -56,3 +56,7 @@ export const changePasswordSchema = z
     message: "Passwords must match",
     path: ["confirmPassword"],
   });
+
+  export type RegisterType = z.infer<typeof RegisterSchema>
+  export type LoginType = z.infer<typeof LoginSchema>
+  export type ChangePasswordType = z.infer<typeof changePasswordSchema>
