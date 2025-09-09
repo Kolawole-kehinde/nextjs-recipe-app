@@ -7,16 +7,15 @@ export async function POST(req: Request) {
     const { name, email, gender, password } = body;
 
     if (!name || !email || !gender || !password) {
-      return NextResponse.json({ error: "All fields are required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "All fields are required" },
+        { status: 400 }
+      );
     }
 
     const supabase = await createClient();
 
-    console.log("SUPABASE_URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
-console.log("SUPABASE_ANON_KEY:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? "loaded" : "missing");
-console.log("Supabase object:", supabase);
-
-
+    // 1️⃣ Create user in Auth
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -26,14 +25,41 @@ console.log("Supabase object:", supabase);
     });
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json(
+        { error: error.message },
+        { status: 500 }
+      );
+    }
+
+    // 2️⃣ Insert into your "users" table 
+    if (data?.user) {
+      const { error: insertError } = await supabase
+        .from("users")
+        .insert([
+          {
+            user_id: data.user.id, // 🔑 auth user id goes here
+            name,
+            email,
+            gender,
+          },
+        ]);
+
+      if (insertError) {
+        return NextResponse.json(
+          { error: insertError.message },
+          { status: 500 }
+        );
+      }
     }
 
     return NextResponse.json(
-      { message: "User registered successfully", user: data },
+      { message: "User registered successfully", user: data.user },
       { status: 200 }
     );
   } catch (err: any) {
-    return NextResponse.json({ error: err.message || "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: err.message || "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

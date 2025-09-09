@@ -10,6 +10,7 @@ import { RegisterSchema, RegisterType } from "@/Schema/auth";
 import { useRegister } from "@/hooks/useRegister";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -65,6 +66,14 @@ const RegisterPage = () => {
             {isLoading ? "Loading..." : "Register"}
           </CustomButton>
         </form>
+
+        
+                <p className="text-center mt-4 text-sm">
+                  Don&#39;t have an account?{" "}
+                  <Link href="/login" className="text-primary">
+                    Login
+                  </Link>
+                </p>
       </div>
     </div>
   );

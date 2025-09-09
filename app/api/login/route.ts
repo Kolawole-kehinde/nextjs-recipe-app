@@ -5,7 +5,7 @@ export async function POST(req: Request) {
   const body = await req.json();
   const { email, password } = body;
 
-  const supabase = createClient();
+  const supabase = await createClient();
 
   if(!email || !password){
      return new Response("Missing email or password", {status: 400})
