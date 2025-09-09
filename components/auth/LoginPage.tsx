@@ -10,7 +10,7 @@ import Link from "next/link";
 import CustomButton from "../CustomButton";
 import CustomInput from "../CutomInput";
 import { LoginLists } from "@/constants/auth";
-import { LoginSchema } from "@/Schema/auth";
+import { LoginSchema, LoginType } from "@/Schema/auth";
 
 const LoginPage = () => {
   const { setUser } = useAuth();
@@ -21,7 +21,7 @@ const LoginPage = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<LoginType>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
@@ -31,7 +31,7 @@ const LoginPage = () => {
 
   const { mutate: login, isPending } = useLogin();
 
-  const onSubmit = (data: { email: string; password: string }) => {
+  const onSubmit = (data: LoginType) => {
     login(data, {
       onSuccess: (res) => {
         toast.success("User logged in successfully!");
