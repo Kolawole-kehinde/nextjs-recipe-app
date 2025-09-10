@@ -40,10 +40,6 @@ export default function ForgetPassword() {
         placeholder="Email"
       />
 
-      {errors.email && (
-        <p className="text-red-500 text-sm">{errors.email.message}</p>
-      )}
-
       <button
         type="submit"
         className="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition duration-300 disabled:opacity-50"
