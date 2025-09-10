@@ -58,3 +58,19 @@ export function useForgotPassword() {
     },
   });
 }
+
+// Reset Password Hook
+
+export function useResetPassword() {
+  const route = useRouter();
+   return useMutation({
+    mutationFn: authApi.resetPassword,
+    onSuccess: () => {
+      toast.success("Password updated successfully!");
+      route.push("/auth/password-success");
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.error || "Something went wrong");
+    }
+  });
+}

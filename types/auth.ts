@@ -13,3 +13,8 @@ export interface RegisterPayload {
 export interface ForgotPasswordPayload {
   email: string;
 }
+
+export interface ResetPassword {
+    passoword: string;
+    confirmPassword: string;
+}
