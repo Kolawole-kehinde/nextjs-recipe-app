@@ -57,6 +57,12 @@ export const changePasswordSchema = z
     path: ["confirmPassword"],
   });
 
+  // Schema for forgot password form
+  export const ForgetPasswordSchema = z.object({
+    email: z.string().email({ message: "Kindly provide a valid email" })
+  })
+
   export type RegisterType = z.infer<typeof RegisterSchema>
   export type LoginType = z.infer<typeof LoginSchema>
   export type ChangePasswordType = z.infer<typeof changePasswordSchema>
+  export type ForgetPasswordType = z.infer<typeof ForgetPasswordSchema>

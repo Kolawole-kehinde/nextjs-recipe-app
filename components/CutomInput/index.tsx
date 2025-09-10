@@ -53,6 +53,8 @@ export default function CustomInput({
             type={openPassword && type === "password" ? "text" : type}
             placeholder={placeholder}
             className={`${className} pr-10`}
+            aria-invalid={!!error}
+            aria-describedby={error ? `${name}-error` : undefined}
             {...field}
           />
           {type === "password" && (
