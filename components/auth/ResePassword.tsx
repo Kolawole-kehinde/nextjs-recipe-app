@@ -7,8 +7,6 @@ import { Button } from "@/components/ui/button";
 import { ResetPasswordSchema, ResetType} from "@/Schema/auth";
 import CustomInput from "../CutomInput";
 
-
-
 export default function ResetPasswordPage() {
   const { mutate: resetPassword, isPending } = useResetPassword();
   const {

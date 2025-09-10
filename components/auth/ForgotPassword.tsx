@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useForgotPassword } from "@/hooks/auth/useAuth";
 import CustomInput from "../CutomInput";
+import { Button } from "../ui/button";
 
 export default function ForgetPassword() {
   const {
@@ -40,13 +41,13 @@ export default function ForgetPassword() {
         placeholder="Email"
       />
 
-      <button
+      <Button
         type="submit"
         className="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition duration-300 disabled:opacity-50"
         disabled={isPending}
       >
         {isPending ? "Loading..." : "Send Reset Link"}
-      </button>
+      </Button>
     </form>
   );
 }
