@@ -15,8 +15,8 @@ const TopDishes = ({
 }) => {
   const { data: products, isLoading, error } = useProducts();
 
-  console.log("Products in TopDishes:", products);
-  console.log("Is loading:", isLoading, "Error:", error);
+  // console.log("Products in TopDishes:", products);
+  // console.log("Is loading:", isLoading, "Error:", error);
 
   const displayProducts = Array.isArray(products) ? products : [];
 

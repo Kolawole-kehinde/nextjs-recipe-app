@@ -2,6 +2,7 @@ import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "@/services/authApi";
 import { toast } from "sonner";
+import userStore from "@/zustand/useStore";
 
 
 export const authKeys = {
@@ -13,11 +14,13 @@ export const authKeys = {
 export function useLogin() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { setUser } = userStore();
 
   return useMutation({
     mutationFn: authApi.login,
     onSuccess: (data) => {
       toast.success("Login successful!");
+      setUser(data.user);
       queryClient.invalidateQueries({ queryKey: authKeys.user() });
       queryClient.invalidateQueries({ queryKey: authKeys.session() });
       router.push("/dashboard");
@@ -32,11 +35,13 @@ export function useLogin() {
 export function useRegister() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { setUser } = userStore();
 
   return useMutation({
     mutationFn: authApi.register,
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Account created successfully!");
+      setUser(data.user); 
       queryClient.invalidateQueries({ queryKey: authKeys.user() });
       router.push("/dashboard");
     },
@@ -59,18 +64,17 @@ export function useForgotPassword() {
   });
 }
 
-// Reset Password Hook
-
+// 🔹 Reset Password Hook
 export function useResetPassword() {
-  const route = useRouter();
-   return useMutation({
+  const router = useRouter();
+  return useMutation({
     mutationFn: authApi.resetPassword,
     onSuccess: () => {
       toast.success("Password updated successfully!");
-      route.push("/auth/password-success");
+      router.push("/auth/password-success");
     },
     onError: (err: any) => {
       toast.error(err?.response?.data?.error || "Something went wrong");
-    }
+    },
   });
 }

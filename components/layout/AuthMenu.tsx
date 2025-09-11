@@ -12,7 +12,8 @@ import {
   Home,
   Settings,
 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import useStore from "@/zustand/useStore";
+
 
 interface AuthMenuProps {
   closeMenu: () => void;
@@ -20,8 +21,7 @@ interface AuthMenuProps {
 }
 
 const AuthMenu: React.FC<AuthMenuProps> = ({ closeMenu, orderId }) => {
-  const { user, loading, handleLogout } = useAuth();
-
+ const { user } = useStore((state) => state.user)
   return (
     <div className="absolute right-0 mt-2 w-44 bg-white rounded-md shadow-lg py-2 z-50">
       {user ? (

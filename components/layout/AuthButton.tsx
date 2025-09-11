@@ -2,24 +2,19 @@
 
 import React, { useState, useEffect } from "react";
 import { User, ChevronDown } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
 import AuthMenu from "./AuthMenu";
+import userStore from "@/zustand/useStore";
 
 const AuthButton = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user } = useAuth();
+  const user = userStore((state) => state.user);
 
   useEffect(() => {
     setIsMenuOpen(false);
   }, [user]);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
 
   return (
     <div className="relative text-black">

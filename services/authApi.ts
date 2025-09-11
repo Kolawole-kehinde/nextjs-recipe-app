@@ -1,5 +1,5 @@
 import api from "@/lib/api";
-import { ForgotPasswordPayload, LoginPayload, RegisterPayload, ResetPassword } from "@/types/auth";
+import { ForgotPasswordPayload, LoginPayload, RegisterPayload, ResetPasswordPayload } from "@/types/auth";
 
 
 export const authApi = {
@@ -19,6 +19,7 @@ export const authApi = {
   },
 };
 
-resetPassword: async (payload: ResetPassword) => {
-  const {data} = await api.post("/reset-password", payload)
+resetPassword: async (payload: ResetPasswordPayload) => {
+  const { data } = await api.post("/reset-password", payload);
+  return data;
 }
