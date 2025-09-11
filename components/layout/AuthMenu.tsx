@@ -21,7 +21,12 @@ interface AuthMenuProps {
 }
 
 const AuthMenu: React.FC<AuthMenuProps> = ({ closeMenu, orderId }) => {
- const { user } = useStore((state) => state.user)
+  
+const { user, logout } = useStore((state) => ({
+  user: state.user,
+  logout: state.logout,
+}));
+
   return (
     <div className="absolute right-0 mt-2 w-44 bg-white rounded-md shadow-lg py-2 z-50">
       {user ? (
@@ -73,7 +78,7 @@ const AuthMenu: React.FC<AuthMenuProps> = ({ closeMenu, orderId }) => {
           <button
             onClick={() => {
               closeMenu();
-              handleLogout();
+              logout();
             }}
             className="flex items-center gap-2 w-full text-left px-4 py-2 text-gray-700 hover:text-primary"
           >
