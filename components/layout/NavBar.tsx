@@ -8,6 +8,9 @@ import SearchBar from "../CustomSearch";
 import NavMenu from "./NavMenu";
 import { useCartContext } from "@/context/CartContext";
 import { Menu, ShoppingCart, X } from "lucide-react";
+
+
+
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { cartItems } = useCartContext();

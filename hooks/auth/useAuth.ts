@@ -78,3 +78,20 @@ export function useResetPassword() {
     },
   });
 }
+
+export function useLogout() {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { logout } = userStore();
+
+  return useMutation({
+    mutationFn: authApi.logout,
+    onSuccess: () => {
+      logout();
+      toast.success("Logged out successfully!");
+      queryClient.invalidateQueries({ queryKey: authKeys.user() });
+      queryClient.invalidateQueries({ queryKey: authKeys.session() });
+      router.push("/auth/login");
+    }
+  })
+}

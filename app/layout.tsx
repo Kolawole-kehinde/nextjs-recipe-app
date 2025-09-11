@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/context/Provider";
 import { CartProvider } from "@/context/CartContext";
-import AppContextProvider from "@/context/AppContextProvider";
 import Navbar from "@/components/layout/NavBar";
 import Footer from "@/components/layout/Footer";
 import Banner from "@/components/LadingPage/Banner";
@@ -35,7 +34,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryProvider>
-          <AppContextProvider>
+         
             <CartProvider>
               <Navbar />
               <main className="">{children}</main>
@@ -43,7 +42,7 @@ export default function RootLayout({
               <Footer />
               <Toaster position="top-center" richColors closeButton />
             </CartProvider>
-          </AppContextProvider>
+        
         </QueryProvider>
       </body>
     </html>

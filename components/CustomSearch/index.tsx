@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useState, useContext, useEffect, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Search } from "lucide-react";
-import { AppContext } from "@/context/AppContextProvider";
 import { menu_list } from "@/constants/assets";
+import { useProducts } from "@/hooks/useProducts";
+
 const MAX_RECENT_SEARCHES = 5;
 const RECENT_SEARCH_KEY = "recentSearches";
+
 const SearchBar: React.FC = () => {
-  const { products } = useContext(AppContext);
+  const { data: products = [], isLoading } = useProducts(); // use your hook
   const [searchTerm, setSearchTerm] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
@@ -50,7 +52,7 @@ const SearchBar: React.FC = () => {
 
   const filteredProducts = useMemo(() => {
     if (!Array.isArray(products)) return [];
-    return products.filter((p) =>
+    return products.filter((p: any) =>
       p.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [products, searchTerm]);
@@ -81,64 +83,70 @@ const SearchBar: React.FC = () => {
       {/* Dropdown */}
       {showDropdown && (
         <div className="absolute z-50 w-full bg-white border border-gray-200 mt-1 rounded-md shadow-lg max-h-80 overflow-y-auto">
-          {/* Recently Searched */}
-          {searchTerm === "" && recentSearches.length > 0 && (
-            <div>
-              <p className="text-xs font-semibold text-gray-500 px-4 py-2">
-                Recently Searched
-              </p>
-              {recentSearches.map((item, idx) => (
-                <div
-                  key={idx}
-                  onClick={() => handleSelectTerm(item)}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                >
-                  {item}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Products */}
-          {searchTerm && (
+          {isLoading ? (
+            <div className="px-4 py-2 text-gray-500">Loading products...</div>
+          ) : (
             <>
-              <p className="text-xs font-semibold text-gray-500 px-4 py-2">
-                Products
-              </p>
-              {filteredProducts.length > 0 ? (
-                filteredProducts.map((item, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() => handleSelectTerm(item.name)}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    {item.name}
-                  </div>
-                ))
-              ) : (
-                <div className="px-4 py-2 text-sm text-gray-500">
-                  No Result Found
+              {/* Recently Searched */}
+              {searchTerm === "" && recentSearches.length > 0 && (
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 px-4 py-2">
+                    Recently Searched
+                  </p>
+                  {recentSearches.map((item, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => handleSelectTerm(item)}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {item}
+                    </div>
+                  ))}
                 </div>
               )}
 
-              {/* Categories */}
-              <p className="text-xs font-semibold text-gray-500 px-4 py-2 mt-2">
-                Categories
-              </p>
-              {filteredCategories.length > 0 ? (
-                filteredCategories.map((cat, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() => handleSelectTerm(cat.menu_name)}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    {cat.menu_name}
-                  </div>
-                ))
-              ) : (
-                <div className="px-4 py-2 text-sm text-gray-500">
-                  No Result Found
-                </div>
+              {/* Products */}
+              {searchTerm && (
+                <>
+                  <p className="text-xs font-semibold text-gray-500 px-4 py-2">
+                    Products
+                  </p>
+                  {filteredProducts.length > 0 ? (
+                    filteredProducts.map((item: any, idx: number) => (
+                      <div
+                        key={idx}
+                        onClick={() => handleSelectTerm(item.name)}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      >
+                        {item.name}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="px-4 py-2 text-sm text-gray-500">
+                      No Result Found
+                    </div>
+                  )}
+
+                  {/* Categories */}
+                  <p className="text-xs font-semibold text-gray-500 px-4 py-2 mt-2">
+                    Categories
+                  </p>
+                  {filteredCategories.length > 0 ? (
+                    filteredCategories.map((cat, idx) => (
+                      <div
+                        key={idx}
+                        onClick={() => handleSelectTerm(cat.menu_name)}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      >
+                        {cat.menu_name}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="px-4 py-2 text-sm text-gray-500">
+                      No Result Found
+                    </div>
+                  )}
+                </>
               )}
             </>
           )}

@@ -1,15 +1,14 @@
-"use client"
+"use client";
 
-import React from 'react';
-import { FaFacebookSquare, FaInstagram, FaLinkedin } from 'react-icons/fa';
-import { useAuth } from '../../hooks/useAuth';
-import Link from 'next/dist/client/link';
-import SuggestionInput from '../SuggestionInput';
+import React from "react";
+import { FaFacebookSquare, FaInstagram, FaLinkedin } from "react-icons/fa";
+import Link from "next/link";
+import SuggestionInput from "../SuggestionInput";
+import { useLogout } from "@/hooks/auth/useAuth";
 
-const Footer = ({orderId}) => {
-   const {loading, handleLogout } = useAuth();
-    // Logic for logging out the user
-  
+const Footer = ({ orderId }: { orderId?: string }) => {
+  const { mutate: logout, isLoading } = useLogout();
+
   return (
     <footer className="bg-black text-white text-sm lg:px-16 mt-10">
       {/* Top Section */}
@@ -25,24 +24,22 @@ const Footer = ({orderId}) => {
           </p>
         </div>
 
-        {/* Company */}
-        {/* <div>
-          <h3 className="font-semibold mb-4">Company</h3>
-          <ul className="space-y-6">
-            <li><Link to="/about" className="hover:underline">About</Link></li>
-            <li><Link to="/partnership" className="hover:underline">Partnership</Link></li>
-            <li><Link to="/contact" className="hover:underline">Contact us</Link></li>
-          </ul>
-        </div> */}
-
         {/* Help & Support */}
         <div>
           <h3 className="font-semibold mb-4">Help & Support</h3>
           <ul className="space-y-6">
-            <li><Link href="/help" className="hover:underline">FAQs</Link></li>
-            <li><Link href="/support" className="hover:underline">Talk to Support</Link></li>
-            <li><Link href="/live-chat" className="hover:underline">Live Chat</Link></li>
-            <li><Link href="/settings" className="hover:underline">Settings</Link></li>
+            <li>
+              <Link href="/help" className="hover:underline">FAQs</Link>
+            </li>
+            <li>
+              <Link href="/support" className="hover:underline">Talk to Support</Link>
+            </li>
+            <li>
+              <Link href="/live-chat" className="hover:underline">Live Chat</Link>
+            </li>
+            <li>
+              <Link href="/settings" className="hover:underline">Settings</Link>
+            </li>
           </ul>
         </div>
 
@@ -50,16 +47,26 @@ const Footer = ({orderId}) => {
         <div>
           <h3 className="font-semibold mb-4">Account</h3>
           <ul className="space-y-6">
-            <li><Link href="/profile" className="hover:underline">Profile</Link></li>
-            <li><Link href={`/order/${orderId}`} className="hover:underline">Orders</Link></li>
-            <li><Link href="/cart" className="hover:underline">Cart</Link></li>
-           <button
-            onClick={() => {
-              handleLogout();
-            }}
-           >
-            {loading ? 'Logging out...' : 'Logout'}
-           </button>
+            <li>
+              <Link href="/profile" className="hover:underline">Profile</Link>
+            </li>
+            {orderId && (
+              <li>
+                <Link href={`/order/${orderId}`} className="hover:underline">Orders</Link>
+              </li>
+            )}
+            <li>
+              <Link href="/cart" className="hover:underline">Cart</Link>
+            </li>
+            <li>
+              <button
+                onClick={() => logout()}
+                disabled={isLoading}
+                className={`hover:underline text-left w-full ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+              >
+                {isLoading ? "Logging out..." : "Logout"}
+              </button>
+            </li>
           </ul>
         </div>
       </div>
@@ -91,7 +98,7 @@ const Footer = ({orderId}) => {
       {/* Bottom Bar */}
       <div className="py-4 border-t border-white/10">
         <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center text-xs gap-2">
-          <p className="text-gray-400 text-center md text-sm :text-left">
+          <p className="text-gray-400 text-center md:text-left text-sm">
             © 2024 Fresh Market Exchange (FDA) Inc. Copyright and rights reserved
           </p>
           <div className="flex justify-center gap-4 text-gray-400">

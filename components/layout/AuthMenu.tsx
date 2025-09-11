@@ -12,8 +12,8 @@ import {
   Home,
   Settings,
 } from "lucide-react";
-import useStore from "@/zustand/useStore";
-
+import { useLogout } from "@/hooks/auth/useAuth";
+import useUserStore from "@/zustand/useStore";
 
 interface AuthMenuProps {
   closeMenu: () => void;
@@ -21,24 +21,23 @@ interface AuthMenuProps {
 }
 
 const AuthMenu: React.FC<AuthMenuProps> = ({ closeMenu, orderId }) => {
-  
-const { user, logout } = useStore((state) => ({
-  user: state.user,
-  logout: state.logout,
-}));
+  const user = useUserStore((state) => state.user);
+  const { mutate: logout, isLoading } = useLogout();
 
   return (
     <div className="absolute right-0 mt-2 w-44 bg-white rounded-md shadow-lg py-2 z-50">
       {user ? (
         <>
+          {/* Greeting */}
           <div className="px-4 py-2 text-gray-700 font-semibold">
             Hello, {user.name || "User"}!
           </div>
 
+          {/* Links */}
           <Link
             href="/profile"
             onClick={closeMenu}
-            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-primary"
+            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-red-500"
           >
             <User size={18} /> Profile
           </Link>
@@ -46,15 +45,15 @@ const { user, logout } = useStore((state) => ({
           <Link
             href="/dashboard"
             onClick={closeMenu}
-            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-primary"
+            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-red-500"
           >
             <Home size={18} /> Dashboard
           </Link>
 
           <Link
-            href={`/order/${orderId}`}
+            href={`/order/${orderId || "#"}`}
             onClick={closeMenu}
-            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-primary"
+            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-red-500"
           >
             <UtensilsCrossed size={18} /> Orders
           </Link>
@@ -62,7 +61,7 @@ const { user, logout } = useStore((state) => ({
           <Link
             href="/help"
             onClick={closeMenu}
-            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-primary"
+            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-red-500"
           >
             <HelpCircle size={18} /> Help Center
           </Link>
@@ -70,28 +69,31 @@ const { user, logout } = useStore((state) => ({
           <Link
             href="/settings"
             onClick={closeMenu}
-            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-primary"
+            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-red-500"
           >
             <Settings size={18} /> Settings
           </Link>
 
+          {/* Logout Button */}
           <button
             onClick={() => {
               closeMenu();
               logout();
             }}
-            className="flex items-center gap-2 w-full text-left px-4 py-2 text-gray-700 hover:text-primary"
+            disabled={isLoading}
+            className="flex items-center gap-2 w-full text-left px-4 py-2 text-gray-700 hover:text-red-500"
           >
             <LogOut size={18} />
-            {loading ? "Logging out..." : "Logout"}
+            {isLoading ? "Logging out..." : "Logout"}
           </button>
         </>
       ) : (
         <>
+          {/* Login / Register Links */}
           <Link
             href="/auth/login"
             onClick={closeMenu}
-            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-primary"
+            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-red-500"
           >
             <LogIn size={18} /> Login
           </Link>
@@ -99,7 +101,7 @@ const { user, logout } = useStore((state) => ({
           <Link
             href="/auth/register"
             onClick={closeMenu}
-            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-primary"
+            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-red-500"
           >
             <UserPlus size={18} /> Register
           </Link>

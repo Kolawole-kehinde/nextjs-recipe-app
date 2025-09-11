@@ -1,4 +1,3 @@
-
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -6,12 +5,11 @@ import { User } from "@/types/auth";
 
 export interface UserState {
   user: User | null;
-  setUser: (user: User | null) => void;
+  setUser: (user: User) => void;
   logout: () => void;
-  
 }
 
-const userStore = create<UserState>()(
+const useUserStore = create<UserState>()(
   persist(
     immer((set) => ({
       user: null,
@@ -33,4 +31,4 @@ const userStore = create<UserState>()(
   )
 );
 
-export default userStore;
+export default useUserStore;
