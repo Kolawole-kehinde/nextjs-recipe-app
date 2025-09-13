@@ -15,9 +15,6 @@ const TopDishes = ({
 }) => {
   const { data: products, isLoading, error } = useProducts();
 
-  // console.log("Products in TopDishes:", products);
-  // console.log("Is loading:", isLoading, "Error:", error);
-
   const displayProducts = Array.isArray(products) ? products : [];
 
   const filteredList =
@@ -47,7 +44,7 @@ const TopDishes = ({
       {showMoreButton && !isLoading && filteredList.length > 0 && (
         <div className="text-center mt-6">
           <Link href="/all-dishes">
-            <button className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-orange-600">
+            <button className="bg-primary text-white px-4 py-2 cursor-pointer rounded-lg hover:bg-orange-600">
               More Dishes
             </button>
           </Link>

@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, MessageCircle, Star, Check } from "lucide-react";
-import RelatedProducts from "../components/RelatedProducts";
-import ProductTabs from "../components/ProductTabs";
 import { useAddToCart, useSetBuyNow } from "@/hooks/useCart";
 import { useProduct } from "@/hooks/useProducts";
 import ProductDetailsSkeleton from "./components/skeletons/ProductDetailsSkeleton";
+import ProductTabs from "./components/ProductTabs";
+import RelatedProducts from "./components/RelatedProducts";
 
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();

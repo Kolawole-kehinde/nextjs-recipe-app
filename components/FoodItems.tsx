@@ -1,16 +1,18 @@
 "use client";
 
+import React from "react";
 import { Heart, Plus } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import Image from "next/image";
-import { FoodItemProps } from "@/types/fooditems";
+import { FoodItemProps } from "@/types/products";
 import {
   useCartItems,
   useAddToCart,
   useRemoveFromCart,
   useFavorites,
   useToggleFavorite,
+  useSetBuyNow,
 } from "@/hooks/useCart";
 
 const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) => {
@@ -19,23 +21,34 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
   const removeFromCart = useRemoveFromCart();
   const favorites = useFavorites();
   const toggleFavorite = useToggleFavorite();
+  const setBuyNow = useSetBuyNow();
 
   const stringId = String(id);
 
+  // Quantity in cart
   const quantityInCart =
     cartItems.find((item) => item.id === stringId)?.quantity || 0;
 
+  // Check if favorite
   const isFavorite = favorites.some((item) => item.id === stringId);
 
-  const product = { id: stringId, name, price, image: image_url, description };
+  // Product object matching CartItem type
+  const product = { id: stringId, name, price, image_url, description };
 
   const handleToggleFavorite = () => {
     toggleFavorite(product);
-    if (!isFavorite) {
-      toast.success(`${name} added to favorites`);
-    } else {
-      toast.success(`${name} removed from favorites`);
-    }
+    toast.success(
+      isFavorite
+        ? `${name} removed from favorites`
+        : `${name} added to favorites`
+    );
+  };
+
+  const handleAddToCart = () => addToCart({ ...product, quantity: 1 });
+
+  const handleBuyNow = () => {
+    setBuyNow({ ...product, quantity: 1 });
+    toast.success(`${name} ready to buy`);
   };
 
   return (
@@ -63,7 +76,7 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
 
           {quantityInCart === 0 ? (
             <Plus
-              onClick={() => addToCart({ ...product, quantity: 1 })}
+              onClick={handleAddToCart}
               className="text-primary text-xl cursor-pointer bg-white rounded-full p-1 hover:scale-110 transition"
             />
           ) : (
@@ -76,7 +89,7 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
               />
               <p className="text-sm font-medium">{quantityInCart}</p>
               <img
-                onClick={() => addToCart({ ...product, quantity: 1 })}
+                onClick={handleAddToCart}
                 src="/images/add_icon_green.png"
                 alt="Add item"
                 className="w-7 cursor-pointer"
@@ -100,6 +113,14 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
         </div>
         <p className="text-sm text-gray-600">{description}</p>
         <p className="text-primary font-bold">${price}</p>
+
+        {/* Buy Now button */}
+        {/* <button
+          onClick={handleBuyNow}
+          className="mt-2 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-1 rounded-md shadow-md"
+        >
+          Buy Now
+        </button> */}
       </div>
     </div>
   );
