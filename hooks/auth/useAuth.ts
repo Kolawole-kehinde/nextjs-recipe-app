@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "@/services/authApi";
 import { toast } from "sonner";
-import userStore from "@/zustand/useStore";
+import userStore from "@/store/useStore";
 
 
 export const authKeys = {

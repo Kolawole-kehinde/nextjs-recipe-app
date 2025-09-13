@@ -13,7 +13,7 @@ import {
   Settings,
 } from "lucide-react";
 import { useLogout } from "@/hooks/auth/useAuth";
-import useUserStore from "@/zustand/useStore";
+import useUserStore from "@/store/useStore";
 
 interface AuthMenuProps {
   closeMenu: () => void;
@@ -22,15 +22,14 @@ interface AuthMenuProps {
 
 const AuthMenu: React.FC<AuthMenuProps> = ({ closeMenu, orderId }) => {
   const user = useUserStore((state) => state.user);
-  const { mutate: logout, isLoading } = useLogout();
+  const { mutate: logout, isPending } = useLogout();
 
   return (
     <div className="absolute right-0 mt-2 w-44 bg-white rounded-md shadow-lg py-2 z-50">
       {user ? (
         <>
-          {/* Greeting */}
           <div className="px-4 py-2 text-gray-700 font-semibold">
-            Hello, {user.name || "User"}!
+            Hello, {user?.name || "User"}!
           </div>
 
           {/* Links */}
@@ -80,11 +79,11 @@ const AuthMenu: React.FC<AuthMenuProps> = ({ closeMenu, orderId }) => {
               closeMenu();
               logout();
             }}
-            disabled={isLoading}
+            disabled={isPending}
             className="flex items-center gap-2 w-full text-left px-4 py-2 text-gray-700 hover:text-red-500"
           >
             <LogOut size={18} />
-            {isLoading ? "Logging out..." : "Logout"}
+            {isPending ? "Logging out..." : "Logout"}
           </button>
         </>
       ) : (

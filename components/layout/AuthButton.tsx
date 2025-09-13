@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { User, ChevronDown } from "lucide-react";
 import AuthMenu from "./AuthMenu";
-import userStore from "@/zustand/useStore";
+import userStore from "@/store/useStore";
 
 const AuthButton = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

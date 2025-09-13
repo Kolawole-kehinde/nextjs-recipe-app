@@ -9,7 +9,7 @@ export interface UserState {
   logout: () => void;
 }
 
-const useUserStore = create<UserState>()(
+const useStore = create<UserState>()(
   persist(
     immer((set) => ({
       user: null,
@@ -31,4 +31,4 @@ const useUserStore = create<UserState>()(
   )
 );
 
-export default useUserStore;
+export default useStore;

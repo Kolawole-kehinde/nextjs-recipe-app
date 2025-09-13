@@ -9,7 +9,7 @@ const MAX_RECENT_SEARCHES = 5;
 const RECENT_SEARCH_KEY = "recentSearches";
 
 const SearchBar: React.FC = () => {
-  const { data: products = [], isLoading } = useProducts(); // use your hook
+  const { data: products = [], isLoading } = useProducts();
   const [searchTerm, setSearchTerm] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);

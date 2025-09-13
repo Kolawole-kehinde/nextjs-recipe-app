@@ -7,7 +7,7 @@ import SuggestionInput from "../SuggestionInput";
 import { useLogout } from "@/hooks/auth/useAuth";
 
 const Footer = ({ orderId }: { orderId?: string }) => {
-  const { mutate: logout, isLoading } = useLogout();
+  const { mutate: logout, isPending } = useLogout();
 
   return (
     <footer className="bg-black text-white text-sm lg:px-16 mt-10">
@@ -61,10 +61,10 @@ const Footer = ({ orderId }: { orderId?: string }) => {
             <li>
               <button
                 onClick={() => logout()}
-                disabled={isLoading}
-                className={`hover:underline text-left w-full ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+                disabled={isPending}
+                className={`hover:underline text-left w-full ${isPending ? "opacity-50 cursor-not-allowed" : ""}`}
               >
-                {isLoading ? "Logging out..." : "Logout"}
+                {isPending ? "Logging out..." : "Logout"}
               </button>
             </li>
           </ul>
