@@ -32,7 +32,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ orderId, isMobile }) => {
     `${baseClass} ${pathname === path ? activeClass : ""}`;
 
   const menuItems = [
-    { to: "/help", label: "Help", icon: <HelpCircle size={20} /> },
+    { to: "/faq", label: "Help", icon: <HelpCircle size={20} /> },
     // { to: "/messages", label: "Messages", icon: <MessageSquareText size={20} /> },
     {
       to: "/cart",
