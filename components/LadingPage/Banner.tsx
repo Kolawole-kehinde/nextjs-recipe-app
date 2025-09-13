@@ -7,7 +7,7 @@ import Link from "next/link";
 const Banner = () => {
   return (
     <section className="bg-[#FFF4F0] px-4 lg:px-0 shadow-md w-full">
-      <div className="wrapper rounded-xl py-6 md:py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="wrapper rounded-xl md:py-10 flex flex-col md:flex-row items-center justify-between gap-6">
         
         {/* Text Section */}
         <div className="max-w-xl">

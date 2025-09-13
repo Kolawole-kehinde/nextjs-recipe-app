@@ -33,7 +33,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ orderId, isMobile }) => {
 
   const menuItems = [
     { to: "/help", label: "Help", icon: <HelpCircle size={20} /> },
-    { to: "/messages", label: "Messages", icon: <MessageSquareText size={20} /> },
+    // { to: "/messages", label: "Messages", icon: <MessageSquareText size={20} /> },
     {
       to: "/cart",
       label: "Cart",
