@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -10,8 +10,9 @@ import {
   ShoppingBag,
   Bell,
   ShoppingCart,
+  Heart,
 } from "lucide-react";
-import { useCartItems } from "@/hooks/useCart";
+import { useCartCount, useFavoritesCount } from "@/hooks/useCart";
 
 interface NavMenuProps {
   orderId?: string;
@@ -19,13 +20,9 @@ interface NavMenuProps {
 }
 
 const NavMenu: React.FC<NavMenuProps> = ({ orderId, isMobile }) => {
-  const cartItems = useCartItems();
+  const cartCount = useCartCount();
+  const favoritesCount = useFavoritesCount();
   const pathname = usePathname();
-
-  const cartCount = useMemo(
-    () => cartItems.reduce((sum, item) => sum + item.quantity, 0),
-    [cartItems]
-  );
 
   const baseClass =
     "flex items-center space-x-1 px-2 py-1 cursor-pointer hover:text-[#FF3D00]";
@@ -46,6 +43,20 @@ const NavMenu: React.FC<NavMenuProps> = ({ orderId, isMobile }) => {
           {cartCount > 0 && (
             <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
               {cartCount}
+            </span>
+          )}
+        </div>
+      ),
+    },
+    {
+      to: "/favorites",
+      label: "Favorites",
+      icon: (
+        <div className="relative">
+          <Heart size={20} />
+          {favoritesCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+              {favoritesCount}
             </span>
           )}
         </div>

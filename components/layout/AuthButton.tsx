@@ -5,6 +5,7 @@ import { User, ChevronDown } from "lucide-react";
 import AuthMenu from "./AuthMenu";
 import userStore from "@/store/useStore";
 
+
 const AuthButton = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const user = userStore((state) => state.user);
