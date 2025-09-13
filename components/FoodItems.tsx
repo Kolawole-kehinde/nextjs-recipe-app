@@ -1,39 +1,41 @@
 "use client";
 
-import { Heart, Plus, Minus } from "lucide-react";
+import { Heart, Plus } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import { useCartContext } from "@/context/CartContext";
 import Image from "next/image";
 import { FoodItemProps } from "@/types/fooditems";
-
+import {
+  useCartItems,
+  useAddToCart,
+  useRemoveFromCart,
+  useFavorites,
+  useToggleFavorite,
+} from "@/hooks/useCart";
 
 const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) => {
-  const { cartItems, addToCart, removeFromCart, toggleFavorite, isFavorite } = useCartContext();
+  const cartItems = useCartItems();
+  const addToCart = useAddToCart();
+  const removeFromCart = useRemoveFromCart();
+  const favorites = useFavorites();
+  const toggleFavorite = useToggleFavorite();
 
   const stringId = String(id);
+
   const quantityInCart =
     cartItems.find((item) => item.id === stringId)?.quantity || 0;
 
-  const product = { id: stringId, name, price, image_url, description };
+  const isFavorite = favorites.some((item) => item.id === stringId);
+
+  const product = { id: stringId, name, price, image: image_url, description };
 
   const handleToggleFavorite = () => {
-    const added = toggleFavorite(product);
-    if (added) {
+    toggleFavorite(product);
+    if (!isFavorite) {
       toast.success(`${name} added to favorites`);
     } else {
-     
+      toast.success(`${name} removed from favorites`);
     }
-  };
-
-  const handleAddToCart = () => {
-    addToCart(product);
-   
-  };
-
-  const handleRemoveFromCart = () => {
-    removeFromCart(stringId);
-   
   };
 
   return (
@@ -46,7 +48,7 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
             className="w-full h-48 object-cover rounded-t-xl"
             width={500}
             height={300}
-            unoptimized={true}
+            unoptimized
           />
         </Link>
 
@@ -55,28 +57,26 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
           <Heart
             onClick={handleToggleFavorite}
             className={`text-xl cursor-pointer ${
-              isFavorite(stringId)
-                ? "fill-red-600 stroke-red-600"
-                : "text-white"
+              isFavorite ? "fill-red-600 stroke-red-600" : "text-white"
             } hover:stroke-red-600 transition`}
           />
 
           {quantityInCart === 0 ? (
             <Plus
-              onClick={handleAddToCart}
+              onClick={() => addToCart({ ...product, quantity: 1 })}
               className="text-primary text-xl cursor-pointer bg-white rounded-full p-1 hover:scale-110 transition"
             />
           ) : (
             <div className="flex items-center gap-2 bg-white p-2 rounded-full shadow-md">
               <img
-                onClick={handleRemoveFromCart}
+                onClick={() => removeFromCart(stringId)}
                 src="/images/remove_icon_red.png"
                 alt="Remove item"
                 className="w-7 cursor-pointer"
               />
               <p className="text-sm font-medium">{quantityInCart}</p>
               <img
-                onClick={handleAddToCart}
+                onClick={() => addToCart({ ...product, quantity: 1 })}
                 src="/images/add_icon_green.png"
                 alt="Add item"
                 className="w-7 cursor-pointer"

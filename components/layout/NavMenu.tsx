@@ -11,7 +11,7 @@ import {
   Bell,
   ShoppingCart,
 } from "lucide-react";
-import { useCartContext } from "@/context/CartContext";
+import { useCartItems } from "@/hooks/useCart";
 
 interface NavMenuProps {
   orderId?: string;
@@ -19,7 +19,7 @@ interface NavMenuProps {
 }
 
 const NavMenu: React.FC<NavMenuProps> = ({ orderId, isMobile }) => {
-  const { cartItems } = useCartContext();
+  const cartItems = useCartItems();
   const pathname = usePathname();
 
   const cartCount = useMemo(

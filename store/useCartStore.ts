@@ -1,104 +1,62 @@
+// /store/cartStore.ts
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import toast from "react-hot-toast";
-import type { Product, CartItem } from "@/types/cart";
+import { CartItem, FavoriteItem, BuyNowItem } from "@/types/cart";
 
 interface CartState {
   cartItems: CartItem[];
-  buyNowItem: CartItem | null;
-  favorites: Product[];
+  favorites: FavoriteItem[];
+  buyNow: BuyNowItem | null;
 
-  // Cart
-  addToCart: (product: Product, quantity?: number) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  // Cart Actions
+  addToCart: (item: CartItem) => void;
+  removeFromCart: (id: string) => void;
   clearCart: () => void;
-  getTotalPrice: () => number;
 
-  // Buy Now
-  buyNow: (product: Product, quantity?: number) => void;
-  clearBuyNow: () => void;
+  // Favorites Actions
+  toggleFavorite: (item: FavoriteItem) => void;
 
-  // Favorites
-  toggleFavorite: (product: Product) => boolean;
-  isFavorite: (productId: string) => boolean;
+  // BuyNow Actions
+  setBuyNow: (item: BuyNowItem | null) => void;
 }
 
-// Zustand Store with localStorage persistence
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       cartItems: [],
-      buyNowItem: null,
       favorites: [],
+      buyNow: null,
 
-      // 🔹 Cart logic
-      addToCart: (product, quantity = 1) => {
+      addToCart: (item) =>
         set((state) => {
-          const existing = state.cartItems.find((item) => item.id === product.id);
-          if (existing) {
-            toast.success(`Updated quantity of ${product.name} in cart.`);
+          const exists = state.cartItems.find((i) => i.id === item.id);
+          if (exists) {
             return {
-              cartItems: state.cartItems.map((item) =>
-                item.id === product.id
-                  ? { ...item, quantity: item.quantity + quantity }
-                  : item
+              cartItems: state.cartItems.map((i) =>
+                i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
               ),
             };
           }
-          return {
-            cartItems: [...state.cartItems, { ...product, quantity }],
-          };
-        });
-      },
+          return { cartItems: [...state.cartItems, item] };
+        }),
 
-      removeFromCart: (productId) =>
+      removeFromCart: (id) =>
         set((state) => ({
-          cartItems: state.cartItems.filter((item) => item.id !== productId),
-        })),
-
-      updateQuantity: (productId, quantity) =>
-        set((state) => ({
-          cartItems: state.cartItems.map((item) =>
-            item.id === productId ? { ...item, quantity } : item
-          ),
+          cartItems: state.cartItems.filter((i) => i.id !== id),
         })),
 
       clearCart: () => set({ cartItems: [] }),
 
-      getTotalPrice: () =>
-        get().cartItems.reduce(
-          (acc, item) => acc + item.price * item.quantity,
-          0
-        ),
+      toggleFavorite: (item) =>
+        set((state) => {
+          const exists = state.favorites.find((f) => f.id === item.id);
+          return exists
+            ? { favorites: state.favorites.filter((f) => f.id !== item.id) }
+            : { favorites: [...state.favorites, item] };
+        }),
 
-      // 🔹 Buy Now logic
-      buyNow: (product, quantity = 1) =>
-        set({ buyNowItem: { ...product, quantity } }),
-
-      clearBuyNow: () => set({ buyNowItem: null }),
-
-      // 🔹 Favorites logic
-      toggleFavorite: (product) => {
-        const exists = get().favorites.some((fav) => fav.id === product.id);
-        if (exists) {
-          set((state) => ({
-            favorites: state.favorites.filter((fav) => fav.id !== product.id),
-          }));
-          return false; // removed
-        } else {
-          set((state) => ({
-            favorites: [...state.favorites, product],
-          }));
-          return true; // added
-        }
-      },
-
-      isFavorite: (productId) =>
-        get().favorites.some((fav) => fav.id === productId),
+      setBuyNow: (item) => set({ buyNow: item }),
     }),
-    {
-      name: "cart-storage", // key in localStorage
-    }
+    { name: "cart-storage" }
   )
 );

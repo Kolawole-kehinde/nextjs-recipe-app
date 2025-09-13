@@ -8,3 +8,26 @@ export interface Product {
 export interface CartItem extends Product {
   quantity: number;
 }
+
+export interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image?: string;
+}
+
+export interface FavoriteItem {
+  id: string;
+  name: string;
+  price: number;
+  image?: string;
+}
+
+export interface BuyNowItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image?: string;
+}
