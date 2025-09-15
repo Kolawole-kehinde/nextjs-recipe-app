@@ -8,6 +8,7 @@ import { useProduct } from "@/hooks/useProducts";
 import ProductDetailsSkeleton from "./components/skeletons/ProductDetailsSkeleton";
 import ProductTabs from "./components/ProductTabs";
 import RelatedProducts from "./components/RelatedProducts";
+import Image from "next/image";
 
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -65,7 +66,7 @@ const ProductDetails = () => {
         <div className="flex flex-col md:flex-row items-center justify-center gap-5 md:gap-20">
           {/* Image */}
           <div>
-            <img
+            <Image
               src={product.image_url || "/images/placeholder.png"}
               alt={product.name}
               className="w-full max-w-[500px] h-auto rounded-2xl shadow-md object-contain"
