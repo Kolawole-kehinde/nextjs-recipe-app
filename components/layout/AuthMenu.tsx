@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useLogout } from "@/hooks/auth/useAuth";
 import useUserStore from "@/store/useStore";
+import { AlertDialog } from "@/components/AlertDialog";
 
 interface AuthMenuProps {
   closeMenu: () => void;
@@ -73,18 +74,23 @@ const AuthMenu: React.FC<AuthMenuProps> = ({ closeMenu, orderId }) => {
             <Settings size={18} /> Settings
           </Link>
 
-          {/* Logout Button */}
-          <button
-            onClick={() => {
-              closeMenu();
-              logout();
-            }}
-            disabled={isPending}
-            className="flex items-center gap-2 w-full text-left px-4 py-2 text-gray-700 hover:text-red-500"
-          >
-            <LogOut size={18} />
-            {isPending ? "Logging out..." : "Logout"}
-          </button>
+          {/* Trigger-based Logout AlertDialog */}
+          <AlertDialog
+            title="Logout Confirmation"
+            description="Are you sure you want to logout?"
+            confirmText="Logout"
+            cancelText="Cancel"
+            onConfirm={logout}
+            trigger={
+              <button
+                disabled={isPending}
+                className="flex items-center gap-2 w-full text-left px-4 py-2 text-gray-700 hover:text-red-500"
+              >
+                <LogOut size={18} />
+                {isPending ? "Logging out..." : "Logout"}
+              </button>
+            }
+          />
         </>
       ) : (
         <>

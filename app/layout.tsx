@@ -7,6 +7,7 @@ import Footer from "@/components/layout/Footer";
 import Banner from "@/components/LadingPage/Banner";
 import { Toaster } from "sonner";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -33,11 +34,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryProvider>
+          
               <Navbar />
               <main className="">{children}</main>
                <Banner/>
               <Footer />
               <Toaster position="top-center" richColors closeButton />
+              
         </QueryProvider>
       </body>
     </html>
