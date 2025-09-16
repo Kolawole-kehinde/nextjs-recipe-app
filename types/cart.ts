@@ -1,6 +1,5 @@
-
 export type FoodItemProps = {
-  id: string | number;
+  id: string; 
   name: string;
   price: number;
   image_url: string;
@@ -8,7 +7,7 @@ export type FoodItemProps = {
 };
 
 export interface Product {
-  id: string | number;
+  id: string; 
   name: string;
   price: number;
   image_url: string;
@@ -16,9 +15,8 @@ export interface Product {
   [key: string]: any;
 }
 
-
 export type CartItem = {
-  id: string;
+  id: string; 
   name: string;
   price: number;
   image_url: string;
@@ -34,7 +32,7 @@ export interface FavoriteItem {
 }
 
 export interface BuyNowItem {
-  id: string;
+  id: string; 
   name: string;
   price: number;
   quantity: number;

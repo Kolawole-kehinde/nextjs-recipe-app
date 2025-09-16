@@ -1,6 +1,6 @@
-// 🔹 API Product type
+
 export interface Product {
-  id: string;
+  id: string | number;
   name: string;
   price: number;
   image_url?: string;    
