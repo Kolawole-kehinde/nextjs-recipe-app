@@ -38,3 +38,12 @@ export interface BuyNowItem {
   quantity: number;
   image_url?: string; 
 }
+
+export type CartItemType = {
+  id: string; 
+  name: string;
+  seller?: string;
+  price: number;
+  quantity: number;
+  image_url: string;
+};
