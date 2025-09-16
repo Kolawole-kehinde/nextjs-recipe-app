@@ -16,13 +16,14 @@ export interface Product {
 }
 
 export type CartItem = {
-  id: string; 
+  id: string;
   name: string;
   price: number;
   image_url: string;
-  description: string;
+  description: string; 
   quantity: number;
 };
+
 
 export interface FavoriteItem {
   id: string;

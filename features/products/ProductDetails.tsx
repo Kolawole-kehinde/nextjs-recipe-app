@@ -17,7 +17,7 @@ const ProductDetails = () => {
   const router = useRouter();
 
   const addToCart = useAddToCart();
-  const setBuyNow = useSetBuyNow(); 
+  const setBuyNow = useSetBuyNow();
 
   const handleQuantityChange = (val: number) => {
     setQuantity((prev) => Math.max(1, prev + val));
@@ -65,11 +65,13 @@ const ProductDetails = () => {
         {/* Product Content */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-5 md:gap-20">
           {/* Image */}
-          <div>
+          <div className="w-full max-w-[500px]">
             <Image
               src={product.image_url || "/images/placeholder.png"}
               alt={product.name}
-              className="w-full max-w-[500px] h-auto rounded-2xl shadow-md object-contain"
+              width={500}
+              height={500}
+              className="w-full h-auto rounded-2xl shadow-md object-contain"
             />
           </div>
 

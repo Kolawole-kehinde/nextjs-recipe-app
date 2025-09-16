@@ -3,21 +3,24 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ArrowDown } from "lucide-react";
-import { useAddToCart, useCartItems, useCartSubtotal, useRemoveFromCart } from "@/hooks/useCart";
-import CartItem from "./CartItem";
+import {
+  useAddToCart,
+  useCartItems,
+  useCartSubtotal,
+  useRemoveFromCart,
+} from "@/hooks/useCart";
+
 import OrderSummary from "@/components/OrderSummary";
 import TopDishes from "@/components/LadingPage/TopDishes";
 import { RecommendedDishes } from "@/components/LadingPage/RecommendedDishes";
+import CartItem from "./CartItem";
 
 export default function CartPage() {
   const router = useRouter();
-
   const cartItems = useCartItems();
   const addToCart = useAddToCart();
   const removeFromCart = useRemoveFromCart();
   const subtotal = useCartSubtotal();
-
-  const handleCheckout = () => router.push("/checkout");
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
@@ -59,6 +62,7 @@ export default function CartPage() {
                 alt="Empty cart"
                 width={136}
                 height={136}
+                className="rounded-lg object-cover"
               />
               <p className="text-lg font-semibold mb-4">
                 Your cart is eager to be filled!
@@ -75,11 +79,7 @@ export default function CartPage() {
 
         {/* Order Summary */}
         {cartItems.length > 0 && (
-          <OrderSummary
-            subtotal={subtotal}
-            buttonText="Proceed to Checkout"
-            onProceed={handleCheckout}
-          />
+          <OrderSummary buttonText="Proceed to Checkout" />
         )}
       </div>
 

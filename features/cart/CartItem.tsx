@@ -1,9 +1,12 @@
 "use client";
 
-import { useAddToCart, useRemoveFromCart } from "@/hooks/useCart";
 import { CartItem as CartItemType } from "@/types/cart";
 
-type Props = CartItemType;
+type Props = CartItemType & {
+  onIncrease: () => void;
+  onDecrease: () => void;
+  onRemove: () => void;
+};
 
 export default function CartItem({
   id,
@@ -11,10 +14,11 @@ export default function CartItem({
   price,
   quantity,
   image_url,
+  description,
+  onIncrease,
+  onDecrease,
+  onRemove,
 }: Props) {
-  const removeFromCart = useRemoveFromCart();
-  const addToCart = useAddToCart();
-
   return (
     <section className="border-b">
       <div className="flex flex-col md:flex-row gap-4 py-4 px-6 border-b shadow-lg">
@@ -35,19 +39,18 @@ export default function CartItem({
             </div>
           </div>
 
+          {description && (
+            <p className="text-sm text-gray-500 mt-2">{description}</p>
+          )}
+
           <div className="flex justify-between items-center mt-4">
-            <button
-              onClick={() => removeFromCart(id)}
-              className="text-primary mr-6"
-            >
+            <button onClick={onRemove} className="text-primary mr-6">
               Remove
             </button>
 
             <div className="flex items-center rounded w-48 h-auto">
               <button
-                onClick={() =>
-                  addToCart({ id, name, price, image_url, quantity: -1 })
-                }
+                onClick={onDecrease}
                 className="border border-primary rounded px-4 py-2"
               >
                 -
@@ -56,9 +59,7 @@ export default function CartItem({
                 <span className="mx-2">{quantity}</span>
               </div>
               <button
-                onClick={() =>
-                  addToCart({ id, name, price, image_url, quantity: 1 })
-                }
+                onClick={onIncrease}
                 className="border border-primary rounded px-4 py-2"
               >
                 +

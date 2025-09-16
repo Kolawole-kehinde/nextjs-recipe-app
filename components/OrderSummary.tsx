@@ -1,18 +1,18 @@
 "use client";
 
-import { useCartCount, useCartItems, useCartSubtotal } from "@/hooks/useCart";
+import { useCartCount, useCartSubtotal } from "@/hooks/useCart";
 import { usePathname, useRouter } from "next/navigation";
-
 
 const formatCurrency = (value: number) =>
   value.toLocaleString("en-US", { style: "currency", currency: "USD" });
 
 export default function OrderSummary({
   buttonText = "Proceed to Checkout",
+  onProceed,
 }: {
   buttonText?: string;
+  onProceed?: () => void;
 }) {
-  const cartItems = useCartItems();
   const subtotal = useCartSubtotal();
   const totalQuantity = useCartCount();
 
@@ -22,6 +22,14 @@ export default function OrderSummary({
 
   const discount = 0;
   const total = subtotal - discount;
+
+  const handleProceed = () => {
+    if (onProceed) {
+      onProceed();
+    } else {
+      router.push("/checkout");
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-md w-full md:w-80">
@@ -51,7 +59,7 @@ export default function OrderSummary({
       {!isCheckoutPage && (
         <div className="p-6">
           <button
-            onClick={() => router.push("/checkout")}
+            onClick={handleProceed}
             className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg text-sm font-semibold"
           >
             {buttonText}
