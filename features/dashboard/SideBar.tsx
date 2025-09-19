@@ -61,7 +61,7 @@ export function DashboardSidebar() {
           {collapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
         </Button>
 
-        <nav className="flex-1 p-4 pt-8">
+        <nav className="flex-1 p-4 pt-8 bg-orange-600">
           <ul className="space-y-2">
             {sidebarItems.map((item, index) => {
               const isActive = pathname === item.href
