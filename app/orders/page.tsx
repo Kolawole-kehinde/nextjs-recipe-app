@@ -1,7 +1,14 @@
-import OrdersPage from '@/features/orders/OrdersPage'
-import React from 'react'
+import { Sidebar } from "@/features/dashboard/SideBar";
+import { MainContent } from "@/features/orders/main-content";
 
- const page = () => {
-  return (<OrdersPage/>)
+
+export default function OrdersPage() {
+  return (
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar />
+      <div className="flex-1 lg:ml-0">
+        <MainContent />
+      </div>
+    </div>
+  )
 }
-export default page

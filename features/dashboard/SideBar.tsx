@@ -3,14 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
-  Home,
   Package,
-  Heart,
-  MapPin,
-  CreditCard,
-  Star,
-  User,
-  HelpCircle,
   Menu,
   X,
   ChevronLeft,
@@ -18,17 +11,9 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
+import { navigation } from "@/constants/sidebar"
 
-const navigation = [
-  { name: "Dashboard", href: "/", icon: Home },
-  { name: "My Orders", href: "/orders", icon: Package },
-  { name: "Wishlist", href: "/wishlist", icon: Heart },
-  { name: "Addresses", href: "/addresses", icon: MapPin },
-  { name: "Payment Methods", href: "/payment-methods", icon: CreditCard },
-  { name: "Reviews", href: "/reviews", icon: Star },
-  { name: "Account", href: "/account", icon: User },
-  { name: "Help & Support", href: "/help", icon: HelpCircle },
-]
+
 
 export function Sidebar() {
   const pathname = usePathname()
@@ -79,7 +64,7 @@ export function Sidebar() {
         </div>
 
         <nav className={cn("px-4 space-y-1", isCollapsed && "lg:px-2")}>
-          {navigation.map((item) => {
+          {navigation?.map((item) => {
             const isActive = pathname === item.href || (item.href === "/orders" && pathname.startsWith("/orders"))
             return (
               <Link
