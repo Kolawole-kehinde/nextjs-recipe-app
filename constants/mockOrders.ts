@@ -1,5 +1,5 @@
-// Mock data for orders
-const mockOrders = {
+
+export const mockOrders = {
   inProgress: [
     {
       id: "ORD-001",
@@ -15,16 +15,16 @@ const mockOrders = {
       customer: "Bob Smith",
       items: 1,
       total: "$89.99",
-      status: "Shipped",
+      status: "Processing",
       date: "2024-01-14",
-      statusColor: "bg-primary text-primary-foreground",
+      statusColor: "bg-secondary text-secondary-foreground",
     },
     {
       id: "ORD-003",
       customer: "Carol Davis",
       items: 2,
       total: "$159.99",
-      status: "Preparing",
+      status: "Processing",
       date: "2024-01-13",
       statusColor: "bg-secondary text-secondary-foreground",
     },
@@ -58,7 +58,7 @@ const mockOrders = {
       status: "Cancelled",
       date: "2024-01-08",
       statusColor: "bg-destructive text-destructive-foreground",
-      reason: "Customer request",
+    //   reason: "Customer request",
     },
   ],
 }

@@ -17,7 +17,7 @@ export default function OrdersPage() {
               <p className="text-muted-foreground">Track and manage all your orders in one place</p>
             </div>
 
-            <OrdersOverview/>
+            {/* <OrdersOverview/> */}
             <OrdersList />
           </div>
         </main>

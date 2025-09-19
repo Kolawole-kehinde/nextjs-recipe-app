@@ -1,108 +1,169 @@
 "use client"
-// import { DashboardHeader } from "@/components/dashboard-header"
-import { DashboardSidebar } from "@/features/dashboard/SideBar"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { TrendingUp, Package, ShoppingCart, DollarSign, Users, Eye } from "lucide-react"
-import { stats } from "@/constants/dashboardStats"
 
-export default function DashboardPage() {
+import { Search, Bell, Package, Heart, TrendingUp, Clock } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from "next/link"
 
+export function DashboardOverview() {
   return (
-    <div className="flex h-screen bg-background">
-      <DashboardSidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* <DashboardHeader /> */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">Dashboard Overview</h1>
-              <p className="text-muted-foreground mt-2">Welcome back! Here's what's happening with your store today.</p>
-            </div>
-
-            <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-              {stats?.map((stat, index) => (
-                <Card key={index} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">{stat.title}</CardTitle>
-                    <stat.icon className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-                    <p className="text-xs text-muted-foreground flex items-center mt-1">
-                      <TrendingUp className="h-3 w-3 mr-1 text-emerald-500" />
-                      {stat.change}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recent Activity</CardTitle>
-                  <CardDescription>Your latest store activities</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">New order received</p>
-                        <p className="text-xs text-muted-foreground">Order #12345 - $89.99</p>
-                      </div>
-                      <span className="text-xs text-muted-foreground">2 min ago</span>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">Product updated</p>
-                        <p className="text-xs text-muted-foreground">Wireless Headphones - Stock updated</p>
-                      </div>
-                      <span className="text-xs text-muted-foreground">5 min ago</span>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">Payment processed</p>
-                        <p className="text-xs text-muted-foreground">Order #12344 - $156.50</p>
-                      </div>
-                      <span className="text-xs text-muted-foreground">10 min ago</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Quick Actions</CardTitle>
-                  <CardDescription>Common tasks and shortcuts</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
-                    <button className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-accent transition-colors">
-                      <Package className="h-5 w-5 text-primary" />
-                      <span className="text-sm font-medium">Add Product</span>
-                    </button>
-                    <button className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-accent transition-colors">
-                      <Eye className="h-5 w-5 text-primary" />
-                      <span className="text-sm font-medium">View Orders</span>
-                    </button>
-                    <button className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-accent transition-colors">
-                      <TrendingUp className="h-5 w-5 text-primary" />
-                      <span className="text-sm font-medium">Analytics</span>
-                    </button>
-                    <button className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-accent transition-colors">
-                      <DollarSign className="h-5 w-5 text-primary" />
-                      <span className="text-sm font-medium">Payments</span>
-                    </button>
-                  </div>
-                </CardContent>
-              </Card>
+    <div className="flex-1 flex flex-col">
+      <header className="bg-white border-b px-4 lg:px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="hidden lg:flex items-center gap-2">
+              <div className="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center">
+                <div className="w-4 h-4 bg-teal-600 rounded" />
+              </div>
+              <span className="text-xl font-bold text-gray-900">EcomDash</span>
             </div>
           </div>
-        </main>
-      </div>
+
+          <div className="flex items-center gap-2 lg:gap-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input placeholder="Search orders, products..." className="pl-10 w-48 sm:w-64 lg:w-80" />
+            </div>
+            <Button variant="ghost" size="icon">
+              <Bell className="w-5 h-5" />
+            </Button>
+            <Avatar className="w-8 h-8 lg:w-10 lg:h-10">
+              <AvatarImage src="/diverse-user-avatars.png" />
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
+          </div>
+        </div>
+      </header>
+
+      <main className="flex-1 p-4 lg:p-6">
+        <div className="space-y-4 lg:space-y-6">
+          <div>
+            <h1 className="text-xl lg:text-2xl font-bold text-gray-900">Dashboard</h1>
+            <p className="text-sm lg:text-base text-gray-600">
+              Welcome back! Here's what's happening with your orders.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-xs lg:text-sm font-medium">Total Orders</CardTitle>
+                <Package className="h-3 w-3 lg:h-4 lg:w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-lg lg:text-2xl font-bold">24</div>
+                <p className="text-xs text-muted-foreground">+2 from last month</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-xs lg:text-sm font-medium">In Progress</CardTitle>
+                <Clock className="h-3 w-3 lg:h-4 lg:w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-lg lg:text-2xl font-bold">3</div>
+                <p className="text-xs text-muted-foreground">Currently processing</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-xs lg:text-sm font-medium">Wishlist Items</CardTitle>
+                <Heart className="h-3 w-3 lg:h-4 lg:w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-lg lg:text-2xl font-bold">12</div>
+                <p className="text-xs text-muted-foreground">Items saved</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-xs lg:text-sm font-medium">Total Spent</CardTitle>
+                <TrendingUp className="h-3 w-3 lg:h-4 lg:w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-lg lg:text-2xl font-bold">$2,847</div>
+                <p className="text-xs text-muted-foreground">This year</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Recent Orders */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg lg:text-xl">Recent Orders</CardTitle>
+                <Link href="/orders">
+                  <Button variant="outline" size="sm">
+                    View All
+                  </Button>
+                </Link>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3 lg:space-y-4">
+                <div className="flex items-center justify-between p-3 lg:p-4 border rounded-lg">
+                  <div className="flex items-center gap-2 lg:gap-3">
+                    <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <Package className="w-4 h-4 lg:w-5 lg:h-5 text-gray-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm lg:text-base">ORD-004</p>
+                      <p className="text-xs lg:text-sm text-gray-600">4 items • $449.99</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Delivered
+                    </span>
+                    <p className="text-xs lg:text-sm text-gray-600 mt-1">Jan 10, 2024</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-3 lg:p-4 border rounded-lg">
+                  <div className="flex items-center gap-2 lg:gap-3">
+                    <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <Package className="w-4 h-4 lg:w-5 lg:h-5 text-gray-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm lg:text-base">ORD-005</p>
+                      <p className="text-xs lg:text-sm text-gray-600">2 items • $199.99</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Delivered
+                    </span>
+                    <p className="text-xs lg:text-sm text-gray-600 mt-1">Jan 9, 2024</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-3 lg:p-4 border rounded-lg">
+                  <div className="flex items-center gap-2 lg:gap-3">
+                    <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <Package className="w-4 h-4 lg:w-5 lg:h-5 text-gray-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm lg:text-base">ORD-003</p>
+                      <p className="text-xs lg:text-sm text-gray-600">1 item • $89.99</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      In Progress
+                    </span>
+                    <p className="text-xs lg:text-sm text-gray-600 mt-1">Jan 8, 2024</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
     </div>
   )
 }

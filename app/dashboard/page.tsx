@@ -1,6 +1,14 @@
-import DashboardPage from "@/features/dashboard"
+import { DashboardOverview } from "@/features/dashboard";
+import { Sidebar } from "@/features/dashboard/SideBar";
 
-const Page = () => {
-    return (<DashboardPage/>)
+
+export default function DashboardPage() {
+  return (
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar />
+      <div className="flex-1 lg:ml-0">
+        <DashboardOverview/>
+      </div>
+    </div>
+  )
 }
-export default Page
