@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@/utils/supabase/server";
 
 export async function POST(req: Request) {
   try {
@@ -14,8 +13,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const cookieStore = cookies();
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+    const supabase = await createClient();
 
     // 1️⃣ Sign in user
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -48,11 +46,7 @@ export async function POST(req: Request) {
       ]);
     }
 
-    // 3️⃣ Session automatically saved in cookies
-    return NextResponse.json(
-      { user, session: data.session },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: "Login successful", user }, { status: 200 });
   } catch (err: any) {
     return NextResponse.json(
       { error: err.message || "Internal Server Error" },

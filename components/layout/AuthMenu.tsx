@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import {
   User,
@@ -23,7 +23,8 @@ interface AuthMenuProps {
 
 const AuthMenu: React.FC<AuthMenuProps> = ({ closeMenu, orderId }) => {
   const user = useUserStore((state) => state.user);
-  const { mutate: logout, isPending } = useLogout();
+  const { mutateAsync: logout, isPending } = useLogout(); // using mutateAsync so it works well in async confirm
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   return (
     <div className="absolute right-0 mt-2 w-44 bg-white rounded-md shadow-lg py-2 z-50">
@@ -51,7 +52,7 @@ const AuthMenu: React.FC<AuthMenuProps> = ({ closeMenu, orderId }) => {
           </Link>
 
           <Link
-            href={`/order/${orderId || "#"}`}
+            href={orderId ? `/order/${orderId}` : "/orders"}
             onClick={closeMenu}
             className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-red-500"
           >
@@ -74,22 +75,26 @@ const AuthMenu: React.FC<AuthMenuProps> = ({ closeMenu, orderId }) => {
             <Settings size={18} /> Settings
           </Link>
 
-          {/* Trigger-based Logout AlertDialog */}
+          {/* Logout button opens dialog */}
+          <button
+            onClick={() => setLogoutDialogOpen(true)}
+            disabled={isPending}
+            className="flex items-center gap-2 w-full text-left px-4 py-2 text-gray-700 hover:text-red-500"
+          >
+            <LogOut size={18} />
+            {isPending ? "Logging out..." : "Logout"}
+          </button>
+
+          {/* Logout confirmation dialog */}
           <AlertDialog
+            open={logoutDialogOpen}
+            onOpenChange={setLogoutDialogOpen}
             title="Logout Confirmation"
             description="Are you sure you want to logout?"
             confirmText="Logout"
             cancelText="Cancel"
             onConfirm={logout}
-            trigger={
-              <button
-                disabled={isPending}
-                className="flex items-center gap-2 w-full text-left px-4 py-2 text-gray-700 hover:text-red-500"
-              >
-                <LogOut size={18} />
-                {isPending ? "Logging out..." : "Logout"}
-              </button>
-            }
+            onCancel={() => setLogoutDialogOpen(false)}
           />
         </>
       ) : (

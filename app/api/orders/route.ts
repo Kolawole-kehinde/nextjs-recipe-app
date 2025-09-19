@@ -1,26 +1,36 @@
-import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
 
-export async function GET(req: Request){
- const {searchParams} = new URL(req.url);
- const userId = searchParams.get("userId");
- 
- if (!userId) {
+export async function GET() {
+  try {
+    const supabase = await createClient();
+
+    // 1️⃣ Get logged in user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // 2️⃣ Fetch orders with items and products
+    const { data: orders, error } = await supabase
+      .from("orders")
+      .select("*, order_items(*, product(*))")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(orders || [], { status: 200 });
+  } catch (err: any) {
     return NextResponse.json(
-        {error: "user ID is required"},
-        {status: 400}
-    )
- }
-
- const  supabase = createClient();
- const {data, error} = await supabase
- .from("orders")
- .select("*")
- .eq("user_id", userId)
- .order("created_at", {ascending: false});
-
- if (error) {
-   return NextResponse.json({error: "Error fetching orders"}, {status: 500})
- }
- return NextResponse.json(data || [])
+      { error: err.message || "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }

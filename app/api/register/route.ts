@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@/utils/supabase/server";
 
 export async function POST(req: Request) {
   try {
@@ -14,15 +13,14 @@ export async function POST(req: Request) {
       );
     }
 
-    const cookieStore = cookies();
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+    const supabase = await createClient();
 
     // 1️⃣ Create user in Supabase Auth
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { name, gender }, 
+        data: { name, gender },
       },
     });
 
@@ -32,12 +30,11 @@ export async function POST(req: Request) {
 
     const user = data.user;
 
-    // 2️⃣ Insert into your custom "users" table
+    // 2️⃣ Insert into custom "users" table
     if (user) {
       const { error: insertError } = await supabase.from("users").insert([
         {
-          user_id: user.id,
-          name,
+          id: user.id,
           email,
           gender,
           created_at: new Date().toISOString(),
@@ -49,11 +46,7 @@ export async function POST(req: Request) {
       }
     }
 
-    // 3️⃣ Session persists automatically in cookies
-    return NextResponse.json(
-      { message: "User registered successfully", user },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: "Signup successful", user }, { status: 201 });
   } catch (err: any) {
     return NextResponse.json(
       { error: err.message || "Internal Server Error" },

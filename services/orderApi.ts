@@ -1,12 +1,13 @@
-import api from "@/lib/api"
+import api from "@/lib/api";
 
-export const fetchOrders = async (userId: string) => {
-   const res = await api.get(`/orders?userId=${userId}`);
-   return res.data;
+// fetch orders
+export const fetchOrders = async () => {
+  const res = await api.get("/orders");
+  return res.data;
 };
 
-
-export const cancelOrder = async(orderId: string) =>{
-    const res = await api.get(`/order/${orderId}cancel`);
-    return res.data;
+// cancel order
+export const cancelOrder = async (orderId: string) => {
+  const res = await api.patch(`/orders/${orderId}/cancel`);
+  return res.data;
 };

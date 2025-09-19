@@ -1,60 +1,44 @@
+
 import { cancelOrder, fetchOrders } from "@/services/orderApi";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import useStore from "@/store/useStore";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image_url: string;
-}
+export function useOrder() {
+  const user = useStore((state) => state.user);
+  const queryClient = useQueryClient();
 
-interface OrderItem {
-  id: string;
-  product: Product;
-  quantity: number;
-}
-
-export interface Order {
-  id: string;
-  order_status: "pending" | "processing" | "completed" | "cancelled";
-  created_at: string;
-  order_items: OrderItem[];
-}
+  // ✅ fetch orders for current logged-in user
+     const {
+  data: orders,
+  isLoading,
+  isError,
+  error,
+} = useQuery({
+  queryKey: ["orders"],
+  queryFn: fetchOrders,
+});
 
 
-export const useOrder = (userId: string | null) => {
-    const queryClient = useQueryClient();
-
-    //fetch orders
-    const {data: orders = [], isLoading, error} = useQuery<Order[], Error>({
-       queryKey: ["orders", userId],
-    queryFn: () => fetchOrders(userId!),
-    enabled: !!userId
-    });
-
-
-     // Cancel order
-  const mutation = useMutation({
-    mutationFn: cancelOrder,
-    onSuccess: (_, orderId) => {
-      queryClient.setQueryData<Order[]>(["orders", userId], (oldOrders = []) =>
-        oldOrders.map((order) =>
-          order.id === orderId ? { ...order, order_status: "cancelled" } : order
-        )
-      );
-      toast.success("Order cancelled");
+  // ✅ cancel order mutation
+  const { mutate: cancel, isPending: isCancelling } = useMutation({
+    mutationFn: (orderId: string) => cancelOrder(orderId),
+    onSuccess: () => {
+      toast.success("Order cancelled successfully");
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
     },
-    onError: () => {
-      toast.error("Failed to cancel order");
+    onError: (err: any) => {
+      toast.error(err?.message || "Failed to cancel order");
     },
   });
 
   return {
+    user,
     orders,
-    loading: isLoading,
+    isLoading,
+    isError,
     error,
-    cancelOrder: mutation.mutateAsync,
+    cancel,
+    isCancelling,
   };
-  
 }
