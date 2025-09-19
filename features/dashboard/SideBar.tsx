@@ -3,8 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
-  Package,
-  Menu,
+Menu,
   X,
   ChevronLeft,
   ChevronRight,
@@ -21,7 +20,7 @@ export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false)
 
   return (
-    <>
+    <section className="bg-black">
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -37,27 +36,18 @@ export function Sidebar() {
 
       <div
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-50 bg-gradient-to-b from-cyan-400 to-teal-600 text-white transform transition-all duration-300 ease-in-out lg:transform-none",
+          "fixed lg:static inset-y-0 left-0 z-50 bg-black text-white transform transition-all duration-300 ease-in-out lg:transform-none",
           isCollapsed ? "lg:w-16" : "lg:w-64",
           "w-64", // Mobile always full width
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         )}
       >
-        <div className={cn("p-6", isCollapsed && "lg:p-4")}>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
-              <Package className="w-5 h-5 text-teal-600" />
-            </div>
-            <span className={cn("text-xl font-bold transition-opacity duration-300", isCollapsed && "lg:hidden")}>
-              EcomDash
-            </span>
-          </div>
-        </div>
+       
 
         <div className="hidden lg:block absolute -right-3 top-8">
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="w-6 h-6 bg-white rounded-full shadow-lg flex items-center justify-center text-teal-600 hover:bg-gray-50 transition-colors"
+            className="w-6 h-6 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
           >
             {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
@@ -91,6 +81,6 @@ export function Sidebar() {
           })}
         </nav>
       </div>
-    </>
+    </section>
   )
 }

@@ -2,7 +2,7 @@ import { CreditCard, Heart, HelpCircle, Home, MapPin, Package, Star, User } from
 export const navigation = [
   { name: "Dashboard", href: "/", icon: Home },
   { name: "My Orders", href: "/orders", icon: Package },
-  { name: "Favorites", href: "/Favorite", icon: Heart },
+  { name: "Favorites", href: "/favorite", icon: Heart },
   { name: "Addresses", href: "/addresses", icon: MapPin },
   { name: "Payment Methods", href: "/payment-methods", icon: CreditCard },
   { name: "Reviews", href: "/reviews", icon: Star },
