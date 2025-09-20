@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { User, ChevronDown } from "lucide-react";
 import AuthMenu from "./AuthMenu";
 import userStore from "@/store/useStore";
-
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const AuthButton = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,25 +13,21 @@ const AuthButton = () => {
     setIsMenuOpen(false);
   }, [user]);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <div className="relative text-black">
-      <button
-        onClick={toggleMenu}
-        className="flex items-center cursor-pointer hover:text-[#FF3D00]"
-      >
-        {user?.avatar ? (
-          <img
-            src={user.avatar}
-            alt="Profile"
-            className="w-8 h-8 rounded-full object-cover border border-gray-300"
-          />
-        ) : (
-          <User size={20} />
-        )}
-        <ChevronDown size={20} />
+    <div className="relative">
+      <button onClick={toggleMenu} className="flex items-center">
+        <Avatar className="w-9 h-9 cursor-pointer border border-gray-200">
+          {user?.avatar ? (
+            <AvatarImage src={user.avatar} alt={user?.name || "Profile"} />
+          ) : (
+            <AvatarFallback>
+              {user?.name?.charAt(0).toUpperCase() || "U"}
+            </AvatarFallback>
+          )}
+        </Avatar>
       </button>
 
       {isMenuOpen && <AuthMenu closeMenu={closeMenu} />}

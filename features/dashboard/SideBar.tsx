@@ -21,14 +21,14 @@ export function Sidebar() {
 
   return (
     <section className="bg-black">
-      <div className="lg:hidden fixed top-4 left-4 z-50">
+      {/* <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="p-2 bg-teal-600 text-white rounded-lg shadow-lg"
         >
           {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
-      </div>
+      </div> */}
 
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 bg-black/50 z-40" onClick={() => setIsMobileMenuOpen(false)} />
@@ -47,7 +47,7 @@ export function Sidebar() {
         <div className="hidden lg:block absolute -right-3 top-8">
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="w-6 h-6 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+            className="w-6 h-6 bg-white text-black rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
           >
             {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
@@ -65,7 +65,7 @@ export function Sidebar() {
                 className={cn(
                   "flex items-center gap-3 rounded-lg text-sm font-medium transition-colors relative group",
                   isCollapsed ? "lg:px-2 lg:py-3 lg:justify-center" : "px-4 py-3",
-                  isActive ? "bg-purple-600 text-white" : "text-white/80 hover:text-white hover:bg-white/10",
+                  isActive ? "bg-orange-600 text-white" : "text-white/80 hover:text-white hover:bg-white/10",
                 )}
               >
                 <item.icon className="w-5 h-5 flex-shrink-0" />

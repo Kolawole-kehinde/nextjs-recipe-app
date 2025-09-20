@@ -15,7 +15,13 @@ const useStore = create<UserState>()(
       user: null,
       setUser: (user) => {
         set((state) => {
-          state.user = user;
+          state.user = {
+            id: user.id,
+            email: user.email,
+            name: user.name ?? null,
+            avatar: user.avatar ?? null,
+            gender: user.gender ?? null,
+          };
         });
       },
       logout: () => {

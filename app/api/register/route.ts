@@ -31,22 +31,31 @@ export async function POST(req: Request) {
     const user = data.user;
 
     // 2️⃣ Insert into custom "users" table
-    if (user) {
-      const { error: insertError } = await supabase.from("users").insert([
-        {
-          id: user.id,
-          email,
-          gender,
-          created_at: new Date().toISOString(),
-        },
-      ]);
+      // Insert into custom "users" table
+if (user) {
+  const { data: insertedUser, error: insertError } = await supabase
+    .from("users")
+    .insert([
+      {
+        user_id: user.id,
+        email,
+        name,    // 👈 include name
+        gender,
+      },
+    ])
+    .select()
+    .single();
 
-      if (insertError) {
-        return NextResponse.json({ error: insertError.message }, { status: 500 });
-      }
-    }
+  if (insertError) {
+    return NextResponse.json({ error: insertError.message }, { status: 500 });
+  }
 
-    return NextResponse.json({ message: "Signup successful", user }, { status: 201 });
+  return NextResponse.json(
+    { message: "Signup successful", user: insertedUser }, 
+    { status: 201 }
+  );
+}
+
   } catch (err: any) {
     return NextResponse.json(
       { error: err.message || "Internal Server Error" },

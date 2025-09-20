@@ -34,7 +34,7 @@ const Banner = () => {
           <img
             src="/images/food_22.png"
             alt="Delicious food"
-            className="w-full md:w-100 h-auto object-cover rounded-lg shadow-lg"
+            className="w-full md:w-100 h-[50px] object-cover rounded-lg shadow-lg"
           />
         </div>
       </div>

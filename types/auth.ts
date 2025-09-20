@@ -1,13 +1,12 @@
 
 export interface User {
   id: string;
-  name: string;
   email: string;
-  gender?: string;  
-  role?: "user" | "admin"; 
-  avatar?: string;   
-  created_at?: string; 
+  name?: string | null;
+  avatar?: string | null;
+  gender?: string | null;
 }
+
 
 // 🔹 Payloads
 export interface LoginPayload {

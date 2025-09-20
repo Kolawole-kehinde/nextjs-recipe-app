@@ -3,9 +3,8 @@ import { createClient } from "@/utils/supabase/server";
 
 export async function GET() {
   try {
-    const supabase = await createClient();
+    const supabase = await createClient(); 
 
-    // 1️⃣ Get logged in user
     const {
       data: { user },
       error: userError,
@@ -15,22 +14,32 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // 2️⃣ Fetch orders with items and products
-    const { data: orders, error } = await supabase
-      .from("orders")
-      .select("*, order_items(*, product(*))")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
+    console.log("👤 Logged in user:", user);
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+  const { data, error } = await supabase
+  .from("orders")
+  .select(`
+    id,
+    created_at,
+    order_status,
+    order_items (
+      id,
+      quantity,
+      product_id,
+      product_name,
+      product:fk_order_items_product (
+        name,
+        price,
+        image_url
+      )
+    )
+  `);
 
-    return NextResponse.json(orders || [], { status: 200 });
+    if (error) throw error;
+
+    return NextResponse.json(data || []);
   } catch (err: any) {
-    return NextResponse.json(
-      { error: err.message || "Internal Server Error" },
-      { status: 500 }
-    );
+    console.error("❌ Orders API Error:", err.message);
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

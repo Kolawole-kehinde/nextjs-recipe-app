@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import DashbordHeader from "../dashboard/dashbord-header"
+import { Heart, ShoppingCart, Trash2 } from "lucide-react"
 
 const wishlistItems = [
   {

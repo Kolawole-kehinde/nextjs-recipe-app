@@ -2,18 +2,19 @@ export interface Product {
   id: string;
   name: string;
   price: number;
-  image_url: string;
+  image_url?: string;
 }
 
 export interface OrderItem {
   id: string;
   quantity: number;
-  product: Product;
+  products: Product;
 }
 
 export interface Order {
   id: string;
   created_at: string;
-  order_status: "pending" | "processing" | "cancelled" | "completed";
+  total: number;
+  status: "processing" | "shipped" | "delivered" | "cancelled";
   order_items: OrderItem[];
 }

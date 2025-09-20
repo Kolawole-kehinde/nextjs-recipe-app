@@ -1,13 +1,13 @@
 import api from "@/lib/api";
 
-// fetch orders
+// Fetch orders from backend
 export const fetchOrders = async () => {
   const res = await api.get("/orders");
   return res.data;
 };
 
-// cancel order
+// Cancel order (example)
 export const cancelOrder = async (orderId: string) => {
-  const res = await api.patch(`/orders/${orderId}/cancel`);
+  const res = await api.delete(`/orders/${orderId}`);
   return res.data;
 };

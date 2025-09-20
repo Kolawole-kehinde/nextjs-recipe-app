@@ -6,8 +6,8 @@ import React from 'react'
 const DashbordHeader = () => {
   return (
     <>
-         <header className="bg-white border-b px-4 lg:px-6 py-4">
-        <div className="flex items-center justify-between">
+         <header className="bg-white border-b px-4 lg:px-6 py-4 ">
+        <div className="flex flex-col md:flex-row items-center justify-between">
            <div>
             <h1 className="text-xl lg:text-2xl font-bold text-gray-900">Dashboard</h1>
             <p className="text-sm lg:text-base text-gray-600">
@@ -16,7 +16,7 @@ const DashbordHeader = () => {
           </div>
 
           <div className="flex items-center gap-2 lg:gap-4">
-            <div className="relative">
+            <div className="hidden lg:block relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input placeholder="Search orders, products..." className="pl-10 w-48 sm:w-64 lg:w-80" />
             </div>

@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import DashbordHeader from "../dashboard/dashbord-header"
+import { Edit, Star, Trash2 } from "lucide-react"
 
 const reviews = [
   {

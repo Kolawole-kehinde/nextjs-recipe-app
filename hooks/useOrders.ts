@@ -1,4 +1,3 @@
-
 import { cancelOrder, fetchOrders } from "@/services/orderApi";
 import useStore from "@/store/useStore";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -8,24 +7,24 @@ export function useOrder() {
   const user = useStore((state) => state.user);
   const queryClient = useQueryClient();
 
-  // ✅ fetch orders for current logged-in user
-     const {
-  data: orders,
-  isLoading,
-  isError,
-  error,
-} = useQuery({
-  queryKey: ["orders"],
-  queryFn: fetchOrders,
-});
+  // Fetch orders for current user
+  const {
+    data: orders,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["orders", user?.id], // ✅ tied to specific user
+    queryFn: fetchOrders,
+    enabled: !!user, // ✅ only run if logged in
+  });
 
-
-  // ✅ cancel order mutation
+  // Cancel order mutation
   const { mutate: cancel, isPending: isCancelling } = useMutation({
     mutationFn: (orderId: string) => cancelOrder(orderId),
     onSuccess: () => {
       toast.success("Order cancelled successfully");
-      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["orders", user?.id] });
     },
     onError: (err: any) => {
       toast.error(err?.message || "Failed to cancel order");
