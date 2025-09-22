@@ -7,21 +7,16 @@ export async function POST(req: Request) {
     const { name, email, gender, password } = body;
 
     if (!name || !email || !gender || !password) {
-      return NextResponse.json(
-        { error: "All fields are required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "All fields are required" }, { status: 400 });
     }
 
     const supabase = await createClient();
 
-    // 1️⃣ Create user in Supabase Auth
+    // 🔑 Sign up user
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        data: { name, gender },
-      },
+      options: { data: { name, gender } },
     });
 
     if (error) {
@@ -30,32 +25,23 @@ export async function POST(req: Request) {
 
     const user = data.user;
 
-    // 2️⃣ Insert into custom "users" table
+    if (user) {
       // Insert into custom "users" table
-if (user) {
-  const { data: insertedUser, error: insertError } = await supabase
-    .from("users")
-    .insert([
-      {
-        user_id: user.id,
-        email,
-        name,    // 👈 include name
-        gender,
-      },
-    ])
-    .select()
-    .single();
+      const { data: insertedUser, error: insertError } = await supabase
+        .from("users")
+        .insert([{ user_id: user.id, email, name, gender }])
+        .select()
+        .single();
 
-  if (insertError) {
-    return NextResponse.json({ error: insertError.message }, { status: 500 });
-  }
+      if (insertError) {
+        return NextResponse.json({ error: insertError.message }, { status: 500 });
+      }
 
-  return NextResponse.json(
-    { message: "Signup successful", user: insertedUser }, 
-    { status: 201 }
-  );
-}
-
+      return NextResponse.json(
+        { message: "Signup successful", user: insertedUser },
+        { status: 201 }
+      );
+    }
   } catch (err: any) {
     return NextResponse.json(
       { error: err.message || "Internal Server Error" },

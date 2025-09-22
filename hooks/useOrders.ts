@@ -1,35 +1,33 @@
-import { cancelOrder, fetchOrders } from "@/services/orderApi";
-import useStore from "@/store/useStore";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { cancelOrder, fetchOrders } from "@/services/orderApi"
+import useStore from "@/store/useStore"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import toast from "react-hot-toast"
 
 export function useOrder() {
-  const user = useStore((state) => state.user);
-  const queryClient = useQueryClient();
+  const user = useStore((state) => state.user)
+  const queryClient = useQueryClient()
 
-  // Fetch orders for current user
   const {
     data: orders,
     isLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: ["orders", user?.id], // ✅ tied to specific user
+    queryKey: ["orders", user?.id],
     queryFn: fetchOrders,
-    enabled: !!user, // ✅ only run if logged in
-  });
+    enabled: !!user,
+  })
 
-  // Cancel order mutation
   const { mutate: cancel, isPending: isCancelling } = useMutation({
     mutationFn: (orderId: string) => cancelOrder(orderId),
     onSuccess: () => {
-      toast.success("Order cancelled successfully");
-      queryClient.invalidateQueries({ queryKey: ["orders", user?.id] });
+      toast.success("Order cancelled successfully")
+      queryClient.invalidateQueries({ queryKey: ["orders", user?.id] })
     },
     onError: (err: any) => {
-      toast.error(err?.message || "Failed to cancel order");
+      toast.error(err?.message || "Failed to cancel order")
     },
-  });
+  })
 
   return {
     user,
@@ -39,5 +37,5 @@ export function useOrder() {
     error,
     cancel,
     isCancelling,
-  };
+  }
 }

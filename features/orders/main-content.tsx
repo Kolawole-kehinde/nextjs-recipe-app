@@ -7,7 +7,6 @@ export function MainContent() {
   return (
     <div className="flex-1 flex flex-col">
       <DashbordHeader/>
-
       <main className="flex-1 p-4 lg:p-6">
         <div className="space-y-4 lg:space-y-6">
           <div className="flex items-center gap-2">

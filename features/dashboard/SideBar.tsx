@@ -20,7 +20,7 @@ export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false)
 
   return (
-    <section className="bg-black">
+    <section className="bg-[#fff4f0] rounded-2xl">
       {/* <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -36,7 +36,7 @@ export function Sidebar() {
 
       <div
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-50 bg-black text-white transform transition-all duration-300 ease-in-out lg:transform-none",
+          "fixed lg:static inset-y-0 left-0 z-50 text-black transform transition-all duration-300 ease-in-out lg:transform-none",
           isCollapsed ? "lg:w-16" : "lg:w-64",
           "w-64", // Mobile always full width
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
@@ -47,7 +47,7 @@ export function Sidebar() {
         <div className="hidden lg:block absolute -right-3 top-8">
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="w-6 h-6 bg-white text-black rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+            className="w-6 h-6 bg-[#fff4f0]  text-black rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
           >
             {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
@@ -65,7 +65,7 @@ export function Sidebar() {
                 className={cn(
                   "flex items-center gap-3 rounded-lg text-sm font-medium transition-colors relative group",
                   isCollapsed ? "lg:px-2 lg:py-3 lg:justify-center" : "px-4 py-3",
-                  isActive ? "bg-orange-600 text-white" : "text-white/80 hover:text-white hover:bg-white/10",
+                  isActive ? "bg-orange-600/35 text-black" : "text-black/80 hover:text-black hover:bg-black/10",
                 )}
               >
                 <item.icon className="w-5 h-5 flex-shrink-0" />

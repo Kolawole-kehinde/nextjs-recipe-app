@@ -1,20 +1,22 @@
-export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image_url?: string;
+interface Product {
+  id: string
+  name: string
+  price: number
+  image_url?: string
 }
 
-export interface OrderItem {
-  id: string;
-  quantity: number;
-  products: Product;
+interface OrderItem {
+  id: string
+  quantity: number
+  product_id: string
+  product_name: string
+  product: Product 
 }
 
 export interface Order {
-  id: string;
-  created_at: string;
-  total: number;
-  status: "processing" | "shipped" | "delivered" | "cancelled";
-  order_items: OrderItem[];
+  id: string
+  created_at: string
+  total: number
+  order_status: "processing" | "shipped" | "delivered" | "cancelled" 
+  order_items: OrderItem[]
 }
