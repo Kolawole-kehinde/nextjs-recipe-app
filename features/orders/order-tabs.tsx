@@ -16,8 +16,6 @@ export function OrdersTabs() {
   if (isError) {
     return <p className="text-red-500">Failed to load orders</p>
   }
-
-  // ✅ Use order.order_status instead of status
   const inProgress = orders?.filter(
     (o: Order) => o.order_status === "processing" || o.order_status === "shipped"
   )

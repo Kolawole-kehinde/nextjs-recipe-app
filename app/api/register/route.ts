@@ -27,18 +27,18 @@ export async function POST(req: Request) {
 
     if (user) {
       // Insert into custom "users" table
-      const { data: insertedUser, error: insertError } = await supabase
+      const { data, error } = await supabase
         .from("users")
         .insert([{ user_id: user.id, email, name, gender }])
         .select()
         .single();
 
-      if (insertError) {
-        return NextResponse.json({ error: insertError.message }, { status: 500 });
+      if (error) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
       }
 
       return NextResponse.json(
-        { message: "Signup successful", user: insertedUser },
+        { message: "Signup successful", user: data },
         { status: 201 }
       );
     }
