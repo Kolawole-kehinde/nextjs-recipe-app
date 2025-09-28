@@ -11,3 +11,23 @@ export const cancelOrder = async (orderId: string) => {
   const res = await api.delete(`/orders/${orderId}`);
   return res.data;
 };
+
+
+
+
+export interface PlaceOrderPayload {
+  items: any[];
+  subtotal: number;
+  shippingInfo: {
+    address: string;
+    city: string;
+    state: string;
+    zip_code: string;
+  };
+  paymentMethod: string;
+}
+
+export const placeOrderRequest = async (payload: PlaceOrderPayload) => {
+  const res = await api.post("/orders/checkout", payload);
+  return res.data;
+};
