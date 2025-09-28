@@ -22,7 +22,6 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { items, totalPrice, shippingInfo, paymentMethod } = body;
 
-    // ✅ Validation
     if (!Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
         { success: false, message: "Items are required" },
@@ -38,11 +37,11 @@ export async function POST(req: Request) {
     }
 
     // ✅ Insert into orders table
-    const { data, error } = await supabase
+    const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert({
         user_id: user.id,
-        total_price: totalPrice, 
+        total_price: totalPrice,
         shipping_info: shippingInfo,
         payment_method: paymentMethod,
         order_status: "pending",
@@ -50,9 +49,25 @@ export async function POST(req: Request) {
       .select("id")
       .single();
 
-    if (error) throw error;
+    if (orderError) throw orderError;
 
-    return NextResponse.json({ success: true, orderId: data.id });
+    // ✅ Insert into order_items table
+    const orderItems = items.map((item: any) => ({
+      order_id: order.id,
+      product_id: item.id,
+      product_name: item.name,
+      quantity: item.quantity,
+      price: item.price,
+      total_price: item.price * item.quantity,
+    }));
+
+    const { error: itemsError } = await supabase
+      .from("order_items")
+      .insert(orderItems);
+
+    if (itemsError) throw itemsError;
+
+    return NextResponse.json({ success: true, orderId: order.id });
   } catch (err) {
     console.error("Checkout API Error:", err);
     return NextResponse.json(
