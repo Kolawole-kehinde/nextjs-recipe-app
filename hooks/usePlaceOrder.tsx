@@ -1,4 +1,6 @@
-import { PlaceOrderPayload, placeOrderRequest } from "@/services/orderApi";
+
+import { placeOrderRequest } from "@/services/orderApi";
+import { PlaceOrderPayload } from "@/types/placeOrder";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 

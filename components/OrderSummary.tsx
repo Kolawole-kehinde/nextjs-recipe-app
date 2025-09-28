@@ -6,22 +6,39 @@ import { usePathname, useRouter } from "next/navigation";
 const formatCurrency = (value: number) =>
   value.toLocaleString("en-US", { style: "currency", currency: "USD" });
 
-export default function OrderSummary({
-  buttonText = "Proceed to Checkout",
-  onProceed,
-}: {
+interface OrderSummaryItem {
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+interface OrderSummaryProps {
+  subtotal?: number;
+  items?: OrderSummaryItem[];
+  showButton?: boolean;
+  className?: string;
   buttonText?: string;
   onProceed?: () => void;
-}) {
-  const subtotal = useCartSubtotal();
-  const totalQuantity = useCartCount();
+}
+
+export default function OrderSummary({
+  subtotal,
+  items,
+  showButton = true,
+  className = "",
+  buttonText = "Proceed to Checkout",
+  onProceed,
+}: OrderSummaryProps) {
+  const subtotalValue = subtotal ?? useCartSubtotal();
+  const totalQuantity =
+    items?.reduce((sum, item) => sum + item.quantity, 0) ?? useCartCount();
 
   const router = useRouter();
   const pathname = usePathname();
   const isCheckoutPage = pathname.includes("/checkout");
 
   const discount = 0;
-  const total = subtotal - discount;
+  const total = subtotalValue - discount;
 
   const handleProceed = () => {
     if (onProceed) {
@@ -32,7 +49,7 @@ export default function OrderSummary({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md w-full md:w-80">
+    <div className={`bg-white rounded-xl shadow-md w-full md:w-80 ${className}`}>
       <h2 className="text-lg font-semibold p-6 mb-4 border-b-2 border-gray-200">
         Order Summary
       </h2>
@@ -44,7 +61,7 @@ export default function OrderSummary({
         </div>
         <div className="flex justify-between p-6 border-b-2 border-gray-200">
           <span>Subtotal:</span>
-          <span>{formatCurrency(subtotal)}</span>
+          <span>{formatCurrency(subtotalValue)}</span>
         </div>
         <div className="flex justify-between p-6 border-b-2 border-gray-200">
           <span>Discount:</span>
@@ -56,7 +73,7 @@ export default function OrderSummary({
         </div>
       </div>
 
-      {!isCheckoutPage && (
+      {showButton && !isCheckoutPage && (
         <div className="p-6">
           <button
             onClick={handleProceed}

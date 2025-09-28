@@ -1,4 +1,5 @@
 import api from "@/lib/api";
+import { PlaceOrderPayload } from "@/types/placeOrder";
 
 // Fetch orders from backend
 export const fetchOrders = async () => {
@@ -12,20 +13,6 @@ export const cancelOrder = async (orderId: string) => {
   return res.data;
 };
 
-
-
-
-export interface PlaceOrderPayload {
-  items: any[];
-  subtotal: number;
-  shippingInfo: {
-    address: string;
-    city: string;
-    state: string;
-    zip_code: string;
-  };
-  paymentMethod: string;
-}
 
 export const placeOrderRequest = async (payload: PlaceOrderPayload) => {
   const res = await api.post("/orders/checkout", payload);

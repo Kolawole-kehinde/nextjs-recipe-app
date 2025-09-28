@@ -7,7 +7,7 @@ export interface CheckoutFormValues {
   city: string;
   state: string;
   zip: string;
-  payment: string;
+  payment: "card" | "paypal" | "cod";
   cardNumber?: string;
   expiry?: string;
   cvv?: string;

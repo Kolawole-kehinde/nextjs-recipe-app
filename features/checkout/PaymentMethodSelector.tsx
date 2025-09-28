@@ -3,16 +3,12 @@
 import { CheckoutFormValues } from "@/Schema/checkoutSchema";
 import { Control, Controller, FieldErrors } from "react-hook-form";
 
-
-const PaymentMethodSelector = ({
-  control,
-  setPaymentMethod,
-  errors,
-}: {
+interface PaymentMethodSelectorProps {
   control: Control<CheckoutFormValues>;
-  setPaymentMethod: (value: CheckoutFormValues["payment"]) => void;
   errors: FieldErrors<CheckoutFormValues>;
-}) => {
+}
+
+const PaymentMethodSelector = ({ control, errors }: PaymentMethodSelectorProps) => {
   return (
     <div className="space-y-4">
       <Controller
@@ -25,10 +21,7 @@ const PaymentMethodSelector = ({
                 type="radio"
                 value="card"
                 checked={field.value === "card"}
-                onChange={(e) => {
-                  field.onChange(e.target.value);
-                  setPaymentMethod(e.target.value as CheckoutFormValues["payment"]);
-                }}
+                onChange={(e) => field.onChange(e.target.value)}
                 className="h-4 w-4 text-orange-600"
               />
               Credit / Debit Card
@@ -39,10 +32,7 @@ const PaymentMethodSelector = ({
                 type="radio"
                 value="paypal"
                 checked={field.value === "paypal"}
-                onChange={(e) => {
-                  field.onChange(e.target.value);
-                  setPaymentMethod(e.target.value as CheckoutFormValues["payment"]);
-                }}
+                onChange={(e) => field.onChange(e.target.value)}
                 className="h-4 w-4 text-orange-600"
               />
               PayPal
@@ -53,10 +43,7 @@ const PaymentMethodSelector = ({
                 type="radio"
                 value="cod"
                 checked={field.value === "cod"}
-                onChange={(e) => {
-                  field.onChange(e.target.value);
-                  setPaymentMethod(e.target.value as CheckoutFormValues["payment"]);
-                }}
+                onChange={(e) => field.onChange(e.target.value)}
                 className="h-4 w-4 text-orange-600"
               />
               Cash on Delivery
