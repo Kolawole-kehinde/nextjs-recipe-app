@@ -54,16 +54,16 @@ export default function CheckoutPage() {
             city: data.city,
             state: data.state,
             zip_code: data.zip,
+            phone: data.phone,   // don’t forget phone!
         };
 
         placeOrder({
-            items,
+            items,               // from cart store
             totalPrice,
             shippingInfo,
             paymentMethod: data.payment,
         });
     };
-
     // ✅ watch payment method live
     const paymentMethod = watch("payment");
 
@@ -76,7 +76,7 @@ export default function CheckoutPage() {
                     showButton={false}
                     className="lg:col-span-1"
                 />
-                
+
 
                 <CheckoutForm
                     control={control}
