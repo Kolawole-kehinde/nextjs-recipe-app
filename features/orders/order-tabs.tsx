@@ -20,7 +20,7 @@ export function OrdersTabs() {
 
   const inProgress = orders?.filter((o: Order) => {
     const status = normalizeStatus(o.order_status)
-    return ["processing", "shipped", "in progress"].includes(status)
+    return ["processing", "in progress"].includes(status)
   })
 
   const delivered = orders?.filter(
@@ -50,7 +50,7 @@ export function OrdersTabs() {
 
       <TabsContent value="inProgress" className="space-y-3 mt-4">
         {inProgress?.length ? (
-          inProgress.map((order) => <OrderCard key={order.id} order={order} />)
+          inProgress.map((order: any) => <OrderCard key={order.id} order={order} />)
         ) : (
           <p className="text-gray-500 text-sm">No in-progress orders.</p>
         )}
@@ -58,7 +58,7 @@ export function OrdersTabs() {
 
       <TabsContent value="delivered" className="space-y-3 mt-4">
         {delivered?.length ? (
-          delivered.map((order) => <OrderCard key={order.id} order={order} />)
+          delivered.map((order: any) => <OrderCard key={order.id} order={order} />)
         ) : (
           <p className="text-gray-500 text-sm">No delivered orders.</p>
         )}
@@ -66,7 +66,7 @@ export function OrdersTabs() {
 
       <TabsContent value="cancelled" className="space-y-3 mt-4">
         {cancelled?.length ? (
-          cancelled.map((order) => <OrderCard key={order.id} order={order} />)
+          cancelled.map((order: any) => <OrderCard key={order.id} order={order} />)
         ) : (
           <p className="text-gray-500 text-sm">No cancelled orders.</p>
         )}

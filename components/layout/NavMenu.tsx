@@ -61,12 +61,12 @@ const NavMenu: React.FC<NavMenuProps> = ({ orderId, isMobile }) => {
         </div>
       ),
     },
-    {
-      to: `/order/${orderId ?? ""}`,
-      label: "Orders",
-      icon: <ShoppingBag size={20} />,
-    },
-    { to: "/notification", label: "Notification", icon: <Bell size={20} /> },
+  {
+  to: orderId ? `/order/${orderId}` : "/orders",
+    label: "Orders",
+    icon: <ShoppingBag size={20} />,
+  },
+  { to: "/notification", label: "Notification", icon: <Bell size={20} /> },
   ];
 
   return (
