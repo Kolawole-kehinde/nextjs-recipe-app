@@ -1,7 +1,9 @@
+// /store/userStore.ts
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { User } from "@/types/auth";
+import { useCartStore } from "./useCartStore";
 
 export interface UserState {
   user: User | null;
@@ -9,19 +11,22 @@ export interface UserState {
   logout: () => void;
 }
 
-const useStore = create<UserState>()(
+const useUserStore = create<UserState>()(
   persist(
     immer((set) => ({
       user: null,
       setUser: (user) => {
         set((state) => {
-        state.user = user;
+          state.user = user;
         });
       },
       logout: () => {
         set((state) => {
           state.user = null;
         });
+
+        // 👇 clear cart when user logs out
+        useCartStore.getState().clearCart();
       },
     })),
     {
@@ -31,4 +36,4 @@ const useStore = create<UserState>()(
   )
 );
 
-export default useStore;
+export default useUserStore;

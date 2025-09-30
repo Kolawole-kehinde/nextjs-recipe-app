@@ -10,86 +10,89 @@ import SuccessModal from "@/components/SuccessModal";
 import { usePlaceOrder } from "@/hooks/usePlaceOrder";
 
 export default function CheckoutPage() {
-    const { cartItems, buyNow, clearCart } = useCartStore();
+  const { cartItems, buyNow, clearCart } = useCartStore();
 
-    // ✅ derive items and totalPrice
-    const items = buyNow ? [buyNow] : cartItems;
-    const totalPrice = items.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-    );
+  // ✅ fallback to array
+  const itemsRaw = buyNow ? [buyNow] : cartItems || [];
 
-    const {
-        control,
-        handleSubmit,
-        formState: { errors, isValid },
-        watch,
-    } = useForm<CheckoutFormValues>({
-        resolver: zodResolver(checkoutSchema),
-        mode: "onChange",
-        defaultValues: {
-            firstName: "",
-            lastName: "",
-            email: "",
-            phone: "",
-            address: "",
-            city: "",
-            state: "",
-            zip: "",
-            payment: undefined,
-            cardNumber: "",
-            expiry: "",
-            cvv: "",
-        },
+  // ✅ map to OrderItemPayload
+  const items = itemsRaw.map((item) => ({
+    id: item.id,
+    name: item.name,
+    price: item.price,
+    quantity: item.quantity,
+  }));
 
-    });
+  const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-    const { placeOrder, isPending, isSuccess, orderId } = usePlaceOrder({
-        clearCart,
-    });
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+    watch,
+  } = useForm<CheckoutFormValues>({
+    resolver: zodResolver(checkoutSchema),
+    mode: "onChange",
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      address: "",
+      city: "",
+      state: "",
+      zip: "",
+      payment: undefined,
+      cardNumber: "",
+      expiry: "",
+      cvv: "",
+    },
+  });
 
-    const onSubmit = (data: CheckoutFormValues) => {
-        const shippingInfo = {
-            address: data.address,
-            city: data.city,
-            state: data.state,
-            zip_code: data.zip,
-            phone: data.phone,   // don’t forget phone!
-        };
+  const { placeOrder, isPending, isSuccess, orderId } = usePlaceOrder({ clearCart });
 
-        placeOrder({
-            items,               // from cart store
-            totalPrice,
-            shippingInfo,
-            paymentMethod: data.payment,
-        });
+  const onSubmit = (data: CheckoutFormValues) => {
+    const shippingInfo = {
+      address: data.address,
+      city: data.city,
+      state: data.state,
+      zip_code: data.zip,
+      phone: data.phone,
     };
-    // ✅ watch payment method live
-    const paymentMethod = watch("payment");
 
-    return (
-        <main className="wrapper bg-gray-50 py-10 px-4">
-            <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-10">
-                <OrderSummary
-                    subtotal={totalPrice}
-                    items={items}
-                    showButton={false}
-                    className="lg:col-span-1"
-                />
+    // ✅ payload now matches API
+    placeOrder({
+      items,
+      totalPrice,
+      shippingInfo,
+      paymentMethod: data.payment,
+    });
+  };
 
+  const paymentMethod = watch("payment");
 
-                <CheckoutForm
-                    control={control}
-                    handleSubmit={handleSubmit}
-                    onSubmit={onSubmit}
-                    errors={errors}
-                    paymentMethod={paymentMethod}
-                    isSubmitting={isPending}
-                    isValid={isValid}
-                />
-            </div>
+  return (
+    <main className="wrapper bg-gray-50 py-10 px-4">
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-10">
+        <OrderSummary
+          subtotal={totalPrice}
+          items={itemsRaw}
+          showButton={false}
+          className="lg:col-span-1"
+        />
 
-            <SuccessModal isOpen={isSuccess} onClose={() => { }} orderId={orderId} />
-        </main>
-    );
+        <CheckoutForm
+          control={control}
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+          errors={errors}
+          paymentMethod={paymentMethod}
+          isSubmitting={isPending}
+          isValid={isValid}
+        />
+      </div>
+
+      <SuccessModal isOpen={isSuccess} onClose={() => {}} orderId={orderId} />
+    </main>
+  );
 }

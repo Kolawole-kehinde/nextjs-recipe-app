@@ -5,31 +5,25 @@ export async function POST(req: Request) {
   const supabase = await createClient();
 
   try {
-    // ✅ Authenticate user
+    // ✅ Authenticate
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     }
 
-    // ✅ Extract body params
+    // ✅ Extract body
     const body = await req.json();
     const { items, totalPrice, paymentMethod, shippingInfo } = body;
 
     if (!items?.length || !totalPrice || !paymentMethod || !shippingInfo) {
-      return NextResponse.json(
-        { success: false, message: "Missing required fields" },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: "Missing required fields" }, { status: 400 });
     }
 
-    // ✅ Insert order
+    // ✅ Step 1: Create the order
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert([
@@ -46,16 +40,12 @@ export async function POST(req: Request) {
 
     if (orderError) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "Order creation failed",
-          error: orderError.message,
-        },
+        { success: false, message: "Order creation failed", error: orderError.message },
         { status: 400 }
       );
     }
 
-    // ✅ Prepare order_items payload
+    // ✅ Step 2: Map items → order_items rows
     const orderItems = items.map((item: any) => ({
       order_id: order.id,
       product_id: item.id,
@@ -65,38 +55,24 @@ export async function POST(req: Request) {
       total_price: item.price * item.quantity,
     }));
 
-    // ✅ Insert order_items
-    const { error: orderItemsError } = await supabase
-      .from("order_items")
-      .insert(orderItems);
+    // ✅ Step 3: Insert into order_items
+    const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
 
-    if (orderItemsError) {
+    if (itemsError) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "Order items insertion failed",
-          error: orderItemsError.message,
-        },
+        { success: false, message: "Failed to insert order items", error: itemsError.message },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      {
-        success: true,
-        message: "Order placed successfully",
-        order,
-      },
+      { success: true, message: "Order placed successfully", order },
       { status: 201 }
     );
   } catch (err: any) {
     console.error("Checkout API Error:", err);
     return NextResponse.json(
-      {
-        success: false,
-        message: "Failed to place order",
-        error: err.message || JSON.stringify(err),
-      },
+      { success: false, message: "Failed to place order", error: err.message || JSON.stringify(err) },
       { status: 500 }
     );
   }

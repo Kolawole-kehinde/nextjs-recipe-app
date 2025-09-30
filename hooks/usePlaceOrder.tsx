@@ -6,7 +6,7 @@ import { toast } from "sonner";
 export const usePlaceOrder = ({ clearCart }: { clearCart: () => void }) => {
   const { mutate: placeOrder, isPending, isSuccess, data } = useMutation({
     mutationFn: (payload: PlaceOrderPayload) => placeOrderRequest(payload),
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Order placed successfully!");
       clearCart();
     },
