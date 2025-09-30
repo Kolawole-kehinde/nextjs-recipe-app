@@ -1,11 +1,10 @@
-
 import { placeOrderRequest } from "@/services/orderApi";
 import { PlaceOrderPayload } from "@/types/placeOrder";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const usePlaceOrder = ({ clearCart }: { clearCart: () => void }) => {
-  const mutation = useMutation({
+  const { mutate: placeOrder, isPending, isSuccess, data } = useMutation({
     mutationFn: (payload: PlaceOrderPayload) => placeOrderRequest(payload),
     onSuccess: (data) => {
       toast.success("Order placed successfully!");
@@ -17,9 +16,9 @@ export const usePlaceOrder = ({ clearCart }: { clearCart: () => void }) => {
   });
 
   return {
-    placeOrder: mutation.mutate,
-    isPending: mutation.isPending,
-    isSuccess: mutation.isSuccess,
-    orderId: mutation.data?.orderId,
+    placeOrder,
+    isPending,
+    isSuccess,
+    orderId: data?.order?.id ?? null,
   };
 };

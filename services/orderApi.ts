@@ -15,6 +15,7 @@ export const cancelOrder = async (orderId: string) => {
 
 
 export const placeOrderRequest = async (payload: PlaceOrderPayload) => {
+  console.log("📦 Payload being sent:", payload); // 👈 Add this
   const res = await api.post("/orders/checkout", payload);
   return res.data;
 };

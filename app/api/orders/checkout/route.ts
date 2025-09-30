@@ -5,7 +5,7 @@ export async function POST(req: Request) {
   const supabase = await createClient();
 
   try {
-    // ✅ Authenticate user
+    // Authenticate user
     const {
       data: { user },
       error: authError,
@@ -18,60 +18,51 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ Parse request body
+    // Extract body params 
     const body = await req.json();
-    const { items, totalPrice, shippingInfo, paymentMethod } = body;
+    const { items, totalPrice, paymentMethod, shippingInfo } = body;
 
-    if (!Array.isArray(items) || items.length === 0) {
+    if (!items || !items.length || !totalPrice || !paymentMethod || !shippingInfo) {
       return NextResponse.json(
-        { success: false, message: "Items are required" },
+        { success: false, message: "Missing required fields", body },
         { status: 400 }
       );
     }
 
-    if (typeof totalPrice !== "number" || totalPrice <= 0) {
-      return NextResponse.json(
-        { success: false, message: "Total price is required" },
-        { status: 400 }
-      );
-    }
-
-    // ✅ Insert into orders table
+    // Insert order into Supabae
     const { data: order, error: orderError } = await supabase
       .from("orders")
-      .insert({
-        user_id: user.id,
-        total_price: totalPrice,
-        shipping_info: shippingInfo,
-        payment_method: paymentMethod,
-        order_status: "pending",
-      })
-      .select("id")
+      .insert([
+        {
+          user_id: user.id,
+          total_price: totalPrice,
+          order_status: "In Progress",
+          payment_method: paymentMethod,
+          shipping_info: shippingInfo, 
+        },
+      ])
+      .select()
       .single();
 
-    if (orderError) throw orderError;
+    if (orderError) {
+      return NextResponse.json(
+        { success: false, message: "Order creation failed", error: orderError.message },
+        { status: 400 }
+      );
+    }
 
-    // ✅ Insert into order_items table
-    const orderItems = items.map((item: any) => ({
-      order_id: order.id,
-      product_id: item.id,
-      product_name: item.name,
-      quantity: item.quantity,
-      price: item.price,
-      total_price: item.price * item.quantity,
-    }));
-
-    const { error: itemsError } = await supabase
-      .from("order_items")
-      .insert(orderItems);
-
-    if (itemsError) throw itemsError;
-
-    return NextResponse.json({ success: true, orderId: order.id });
-  } catch (err) {
+    return NextResponse.json(
+      { success: true, message: "Order placed successfully", order },
+      { status: 201 }
+    );
+  } catch (err: any) {
     console.error("Checkout API Error:", err);
     return NextResponse.json(
-      { success: false, message: "Failed to place order" },
+      {
+        success: false,
+        message: "Failed to place order",
+        error: err.message || JSON.stringify(err),
+      },
       { status: 500 }
     );
   }
