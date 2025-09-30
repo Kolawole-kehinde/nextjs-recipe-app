@@ -1,10 +1,10 @@
 import { cancelOrder, fetchOrders } from "@/services/orderApi"
-import useStore from "@/store/useStore"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import toast from "react-hot-toast"
+import useUserStore from "@/store/useStore"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { toast } from "sonner"
 
 export function useOrder() {
-  const user = useStore((state) => state.user)
+  const user = useUserStore((state) => state.user)
   const queryClient = useQueryClient()
 
   const {
@@ -13,9 +13,9 @@ export function useOrder() {
     isError,
     error,
   } = useQuery({
-    queryKey: ["orders", user?.id],
+    queryKey: ["orders", user?.id],  // 👌 caching per-user
     queryFn: fetchOrders,
-    enabled: !!user,
+    enabled: !!user,                 // only fetch when user exists
   })
 
   const { mutate: cancel, isPending: isCancelling } = useMutation({

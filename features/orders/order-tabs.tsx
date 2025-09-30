@@ -5,6 +5,7 @@ import { Clock, CheckCircle, XCircle } from "lucide-react"
 import { OrderCard } from "./order-card"
 import { useOrder } from "@/hooks/useOrders"
 import type { Order } from "@/types/order"
+import { normalizeStatus } from "@/utils/status"
 
 export function OrdersTabs() {
   const { orders, isLoading, isError } = useOrder()
@@ -16,11 +17,19 @@ export function OrdersTabs() {
   if (isError) {
     return <p className="text-red-500">Failed to load orders</p>
   }
-  const inProgress = orders?.filter(
-    (o: Order) => o.order_status === "processing" || o.order_status === "shipped"
+
+  const inProgress = orders?.filter((o: Order) => {
+    const status = normalizeStatus(o.order_status)
+    return ["processing", "shipped", "in progress"].includes(status)
+  })
+
+  const delivered = orders?.filter(
+    (o: Order) => normalizeStatus(o.order_status) === "delivered"
   )
-  const delivered = orders?.filter((o: Order) => o.order_status === "delivered")
-  const cancelled = orders?.filter((o: Order) => o.order_status === "cancelled")
+
+  const cancelled = orders?.filter(
+    (o: Order) => normalizeStatus(o.order_status) === "cancelled"
+  )
 
   return (
     <Tabs defaultValue="inProgress" className="w-full">

@@ -5,6 +5,15 @@ import AuthMenu from "./AuthMenu";
 import userStore from "@/store/useStore";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
+// Get initials like "KK"
+const getInitials = (name: string) => {
+  const parts = name.trim().split(" ");
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (
+    (parts[0][0] || "").toUpperCase() + (parts[1][0] || "").toUpperCase()
+  );
+};
+
 const AuthButton = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const user = userStore((state) => state.user);
@@ -20,11 +29,16 @@ const AuthButton = () => {
     <div className="relative">
       <button onClick={toggleMenu} className="flex items-center">
         <Avatar className="w-9 h-9 cursor-pointer border border-gray-200">
-          {user?.avatar ? (
-            <AvatarImage src={user.avatar} alt={user?.name || "Profile"} />
+          {!user ? (
+            // No user → default image
+            <AvatarImage src="/images/Ellipse 2.png" alt="Guest" />
+          ) : user.avatar ? (
+            // User with uploaded avatar
+            <AvatarImage src={user.avatar} alt={user.name || "Profile"} />
           ) : (
+            // User without avatar → initials
             <AvatarFallback>
-              {user?.name?.charAt(0).toUpperCase() || "U"}
+              {user.name ? getInitials(user.name) : "U"}
             </AvatarFallback>
           )}
         </Avatar>

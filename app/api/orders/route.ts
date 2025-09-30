@@ -5,8 +5,11 @@ export async function GET() {
   try {
     const supabase = await createClient();
 
-    // ✅ Correctly get user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    // ✅ Get authenticated user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
     if (userError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -14,11 +17,11 @@ export async function GET() {
 
     console.log("Logged in user:", user.id);
 
-    // ✅ Correctly filter by user_id
+    // ✅ Fetch only orders belonging to the logged-in user
     const { data, error } = await supabase
       .from("orders")
       .select("*")
-      .eq("user_id", user.id)
+      .eq("user_id", user.id) // <--- this ensures security
       .order("created_at", { ascending: false });
 
     if (error) {

@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import {
   Home,
   HelpCircle,
-  MessageSquareText,
   ShoppingBag,
   Bell,
   ShoppingCart,

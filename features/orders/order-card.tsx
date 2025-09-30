@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import type { Order } from "@/types/order"
+import { normalizeStatus } from "@/utils/status"
 
 interface OrderCardProps {
   order: Order
@@ -19,27 +20,32 @@ interface OrderCardProps {
 
 export function OrderCard({ order }: OrderCardProps) {
   const getStatusBadge = (status: string) => {
-    switch (status) {
+    switch (normalizeStatus(status)) {
       case "delivered":
         return <Badge className="bg-green-500 text-white text-xs">Delivered</Badge>
       case "processing":
-        return <Badge className="bg-blue-500 text-white text-xs">Processing</Badge>
+      case "in progress":
+        return <Badge className="bg-blue-500 text-white text-xs">In Progress</Badge>
       case "shipped":
         return <Badge className="bg-orange-500 text-white text-xs">Shipped</Badge>
       case "cancelled":
         return <Badge className="bg-red-500 text-white text-xs">Cancelled</Badge>
       default:
-        return <Badge variant="secondary" className="text-xs">{status}</Badge>
+        return (
+          <Badge variant="secondary" className="text-xs">
+            {status}
+          </Badge>
+        )
     }
   }
 
-  const itemCount = order.order_items.reduce((sum, item) => sum + item.quantity, 0)
   const formattedDate = new Date(order.created_at).toLocaleDateString()
 
   return (
     <Card className="p-3">
       <CardContent className="p-0">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          {/* Left side (order info) */}
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
               <div className="w-4 h-4 border-2 border-gray-400 rounded-sm" />
@@ -50,13 +56,17 @@ export function OrderCard({ order }: OrderCardProps) {
             </div>
           </div>
 
+          {/* Right side (price + badge + actions) */}
           <div className="flex items-center gap-3">
-            <div className="text-right">
-              <p className="text-lg font-bold">${order.total.toFixed(2)}</p>
-              <p className="text-xs text-gray-500">{itemCount} items</p>
-            </div>
+            <div className="flex flex-col items-end">
+              {/* Price on top */}
+              <p className="text-lg font-bold">
+                ${order.total_price.toFixed(2)}
+              </p>
 
-            {getStatusBadge(order.order_status)}
+              {/* Status badge below */}
+              <div className="mt-1">{getStatusBadge(order.order_status)}</div>
+            </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -66,7 +76,10 @@ export function OrderCard({ order }: OrderCardProps) {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href={`/orders/${order.id}`} className="flex items-center gap-2">
+                  <Link
+                    href={`/orders/${order.id}`}
+                    className="flex items-center gap-2"
+                  >
                     <Eye className="w-4 h-4" /> View Details
                   </Link>
                 </DropdownMenuItem>
