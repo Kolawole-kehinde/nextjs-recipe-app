@@ -1,3 +1,4 @@
+// app/api/orders/route.ts
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 
@@ -5,7 +6,6 @@ export async function GET() {
   try {
     const supabase = await createClient();
 
-    // ✅ Get authenticated user
     const {
       data: { user },
       error: userError,
@@ -15,13 +15,28 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    console.log("Logged in user:", user.id);
-
-    // ✅ Fetch only orders belonging to the logged-in user
+    // ✅ Fetch order + items + products
     const { data, error } = await supabase
       .from("orders")
-      .select("*")
-      .eq("user_id", user.id) // <--- this ensures security
+      .select(`
+        id,
+        order_status,
+       
+        created_at,
+        total_price,
+        order_items (
+          id,
+          quantity,
+          product_id,
+          products (
+            id,
+            name,
+            price,
+            image_url
+          )
+        )
+      `)
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
     if (error) {

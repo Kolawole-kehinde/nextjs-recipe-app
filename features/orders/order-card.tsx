@@ -43,47 +43,43 @@ export function OrderCard({ order }: OrderCardProps) {
   return (
     <Card className="p-5">
       <CardContent className="p-4">
-        {/* ✅ Mobile: Two rows */}
-       {/* ✅ Mobile: Two rows */}
-<div className="flex flex-col sm:hidden space-y-3">
-  {/* Row 1: Order ID + Date */}
-  <div className="flex items-center justify-between">
-    <h3 className="font-semibold text-base">#{order.id}</h3>
-    <p className="text-sm text-gray-500">{formattedDate}</p>
-  </div>
+        {/* ✅ Mobile: Two rows with Separator */}
+        <div className="flex flex-col sm:hidden space-y-3">
+          {/* Row 1: Order ID + Date */}
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-base">#{order.id}</h3>
+            <p className="text-sm text-gray-500">{formattedDate}</p>
+          </div>
 
-  {/* 🔹 Separator for mobile */}
-  <Separator />
+          {/* 🔹 Separator visible only on mobile */}
+          <Separator />
 
-  {/* Row 2: Price | Status | 3 dots */}
-  <div className="flex items-center justify-between">
-    <p className="text-lg font-bold">${order.total_price.toFixed(2)}</p>
-    <div className="flex-1 flex justify-center">
-      {getStatusBadge(order.order_status)}
-    </div>
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="w-8 h-8">
-          <MoreHorizontal className="w-4 h-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem asChild>
-          <Link
-            href={`/orders/${order.id}`}
-            className="flex items-center gap-2"
-          >
-            <Eye className="w-4 h-4" /> View Details
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem className="flex items-center gap-2">
-          <Truck className="w-4 h-4" /> Track Order
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  </div>
-</div>
-
+          {/* Row 2: Price | Status | 3 dots */}
+          <div className="flex items-center justify-between">
+            <p className="text-lg font-bold">${order.total_price.toFixed(2)}</p>
+            <div className="flex-1 flex justify-center">{getStatusBadge(order.order_status)}</div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="w-8 h-8">
+                  <MoreHorizontal className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={`/orders/${order.id}`}
+                    className="flex items-center gap-2"
+                  >
+                    <Eye className="w-4 h-4" /> View Details
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="flex items-center gap-2">
+                  <Truck className="w-4 h-4" /> Track Order
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
 
         {/* ✅ md+ screens: Original layout untouched */}
         <div className="hidden sm:flex flex-row items-center justify-between gap-3">
@@ -97,8 +93,6 @@ export function OrderCard({ order }: OrderCardProps) {
               <p className="text-base text-gray-500">{formattedDate}</p>
             </div>
           </div>
-
-          <Separator className="hidden sm:block text-red-700" />
 
           {/* Right side (price + badge + actions) */}
           <div className="flex items-center gap-3">
