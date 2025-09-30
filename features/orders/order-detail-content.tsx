@@ -5,9 +5,6 @@ import {
   Search,
   Bell,
   MapPin,
-  CreditCard,
-  Phone,
-  Mail,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +20,7 @@ interface OrderDetailsContentProps {
 }
 
 export function OrderDetailsContent({ orderId }: OrderDetailsContentProps) {
-  const { orders, isLoading, isError } = useOrder();
+  const { orders, isLoading, isError, cancel, isCancelling } = useOrder();
 
   if (isLoading) {
     return <p className="p-6">Loading order details...</p>;
@@ -40,7 +37,7 @@ export function OrderDetailsContent({ orderId }: OrderDetailsContentProps) {
             <p className="text-gray-600 mb-4">
               Please try again or go back to your orders.
             </p>
-            <Link href="/">
+            <Link href="/orders">
               <Button>Back to Orders</Button>
             </Link>
           </div>
@@ -63,7 +60,7 @@ export function OrderDetailsContent({ orderId }: OrderDetailsContentProps) {
             <p className="text-gray-600 mb-4">
               The order {orderId} could not be found.
             </p>
-            <Link href="/">
+            <Link href="/orders">
               <Button>Back to Orders</Button>
             </Link>
           </div>
@@ -103,8 +100,7 @@ export function OrderDetailsContent({ orderId }: OrderDetailsContentProps) {
       sum + (item.products?.price || 0) * item.quantity,
     0
   );
-  // const shipping = order.shipping_fee || 0;
-  const total = subtotal ;
+  const total = subtotal;
 
   return (
     <div className="flex-1 flex flex-col">
@@ -112,15 +108,12 @@ export function OrderDetailsContent({ orderId }: OrderDetailsContentProps) {
       <header className="bg-white border-b px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/">
+            <Link href="/orders">
               <Button variant="ghost" size="sm">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Orders
               </Button>
             </Link>
-            <div className="flex items-center gap-2">
-             
-            </div>
           </div>
 
           <div className="flex items-center gap-4">
@@ -146,18 +139,24 @@ export function OrderDetailsContent({ orderId }: OrderDetailsContentProps) {
       <main className="flex-1 p-6 space-y-6">
         {/* Order Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">{order.id}</h1>
-            <p className="text-gray-600">
-              Placed on{" "}
-              {new Date(order.created_at).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
-            </p>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-gray-900">{order.id}</h1>
+            {getStatusBadge(order.status)}
           </div>
-          {getStatusBadge(order.status)}
+
+          <div className="flex items-center gap-3">
+            {/* Show cancel if not delivered or cancelled */}
+            {order.status !== "delivered" && order.status !== "cancelled" && (
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => cancel(order.id)}
+                disabled={isCancelling}
+              >
+                {isCancelling ? "Cancelling..." : "Cancel Order"}
+              </Button>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -210,10 +209,6 @@ export function OrderDetailsContent({ orderId }: OrderDetailsContentProps) {
                   <span>Subtotal</span>
                   <span>₦{subtotal}</span>
                 </div>
-                <div className="flex justify-between">
-                  {/* <span>Shipping</span> */}
-                  {/* <span>₦{shipping}</span> */}
-                </div>
                 <Separator />
                 <div className="flex justify-between font-bold text-lg">
                   <span>Total</span>
@@ -234,36 +229,6 @@ export function OrderDetailsContent({ orderId }: OrderDetailsContentProps) {
                 <p>{order.shipping_address || "Not provided"}</p>
               </CardContent>
             </Card>
-
-            {/* Payment Method */}
-            {/* <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CreditCard className="w-5 h-5" />
-                  Payment Method
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>{order.payment_method || "Not specified"}</p>
-              </CardContent>
-            </Card> */}
-
-            {/* Customer Info */}
-            {/* <Card>
-              <CardHeader>
-                <CardTitle>Customer Information</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm">{order.customer_email}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm">{order.customer_phone}</span>
-                </div>
-              </CardContent>
-            </Card> */}
           </div>
         </div>
       </main>
