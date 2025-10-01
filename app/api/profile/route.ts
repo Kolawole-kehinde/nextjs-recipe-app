@@ -13,7 +13,7 @@ export async function GET() {
   const { data, error } = await supabase
     .from("users")
     .select("*")
-    .eq("id", user.id)
+    .eq("user_id", user.id) // ✅ use FK, not PK
     .single();
 
   if (error) {
@@ -36,8 +36,16 @@ export async function PUT(req: Request) {
 
   const { data, error } = await supabase
     .from("users")
-    .update(body)
-    .eq("id", user.id)
+    .update({
+      name: body.name,
+      email: body.email,
+      gender: body.gender,
+      phone: body.phone,
+      bio: body.bio,
+      location: body.location,
+      avatar: body.avatar,
+    })
+    .eq("user_id", user.id) 
     .select()
     .single();
 
