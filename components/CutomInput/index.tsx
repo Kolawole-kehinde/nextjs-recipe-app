@@ -10,8 +10,8 @@ interface CustomInputProps {
   label?: string;
   type?: string;
   placeholder?: string;
-  options?: { value: string; label: string }[];
   className?: string;
+  disabled?: boolean;
 }
 
 export default function CustomInput({
@@ -20,8 +20,8 @@ export default function CustomInput({
   label,
   type = "text",
   placeholder,
-  options = [],
   className = "w-full p-2 border rounded",
+  disabled,
 }: CustomInputProps) {
   const {
     field,
@@ -34,39 +34,31 @@ export default function CustomInput({
   const [openPassword, setOpenPassword] = useState(false);
 
   return (
-    <fieldset className="space-y-3">
-      {label && <label htmlFor={name}>{label}</label>}
-
-      {type === "select" ? (
-        <select id={name} className={className} {...field}>
-          <option value="">{placeholder || "Select"}</option>
-          {options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-      ) : (
-        <div className="relative">
-          <input
-            id={name}
-            type={openPassword && type === "password" ? "text" : type}
-            placeholder={placeholder}
-            className={`${className} pr-10`}
-            aria-invalid={!!error}
-            aria-describedby={error ? `${name}-error` : undefined}
-            {...field}
-          />
-          {type === "password" && (
-            <div
-              className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-gray-500"
-              onClick={() => setOpenPassword((prev) => !prev)}
-            >
-              {openPassword ? <Eye /> : <EyeOff />}
-            </div>
-          )}
-        </div>
+    <fieldset className="space-y-2">
+      {label && (
+        <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+          {label}
+        </label>
       )}
+
+      <div className="relative">
+        <input
+          id={name}
+          type={openPassword && type === "password" ? "text" : type}
+          placeholder={placeholder}
+          className={`${className} pr-10`}
+          disabled={disabled}
+          {...field}
+        />
+        {type === "password" && (
+          <div
+            className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-gray-500"
+            onClick={() => setOpenPassword((prev) => !prev)}
+          >
+            {openPassword ? <Eye /> : <EyeOff />}
+          </div>
+        )}
+      </div>
 
       {error && <p className="text-red-500 text-sm">{error.message}</p>}
     </fieldset>

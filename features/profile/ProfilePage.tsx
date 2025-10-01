@@ -80,7 +80,7 @@ const ProfilePage = () => {
           {/* Edit Profile */}
           <div className="md:ml-auto mt-2 md:mt-0">
             <button
-              onClick={() => router.push("/edit-profile")}
+              onClick={() => router.push("/profile/edit-profile")}
               className="flex items-center gap-2 px-4 py-2 bg-white text-primary border border-white rounded-md hover:bg-opacity-90 text-sm font-medium"
             >
               <UserPen size={16} /> Edit Profile

@@ -1,13 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import CustomButton from "@/components/CustomButton";
 import { ArrowLeft } from "lucide-react";
-import useUserStore from "@/store/useStore";
 import { useProfile } from "@/hooks/profile/useProfile";
+import useUserStore from "@/store/useStore";
+import CustomButton from "@/components/CustomButton";
 import { editProfileInputs } from "@/constants/editProfileInputs";
+import { ProfileFormValues, profileSchema } from "@/Schema/profileSchema";
 import CustomInput from "@/components/CutomInput";
 
 const EditProfile = () => {
@@ -15,17 +18,25 @@ const EditProfile = () => {
   const { profile, editProfile, isUpdating } = useProfile();
   const { setUser } = useUserStore();
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    bio: "",
-    location: "",
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      bio: "",
+      location: "",
+    },
   });
 
   useEffect(() => {
     if (profile) {
-      setFormData({
+      reset({
         name: profile.name || "",
         email: profile.email || "",
         phone: profile.phone || "",
@@ -33,29 +44,16 @@ const EditProfile = () => {
         location: profile.location || "",
       });
     }
-  }, [profile]);
+  }, [profile, reset]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleUpdate = (e: React.FormEvent) => {
-    e.preventDefault();
-    editProfile(formData, {
-      onSuccess: (data) => {
-        setUser(data.user);
+  const onSubmit = (data: ProfileFormValues) => {
+    editProfile(data, {
+      onSuccess: (res) => {
+        setUser(res.user);
         toast.success("Profile updated successfully!");
         router.push("/profile");
       },
-      onError: () => {
-        toast.error("Update failed. Please try again.");
-      },
+      onError: () => toast.error("Update failed. Please try again."),
     });
   };
 
@@ -65,49 +63,46 @@ const EditProfile = () => {
         onClick={() => router.back()}
         className="flex items-center gap-2 text-sm font-medium lg:ml-8 mb-4"
       >
-        <ArrowLeft size={20} />
+        <ArrowLeft size={20} /> Back
       </button>
 
       <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-8 space-y-6">
         <h2 className="text-2xl font-bold text-gray-800">Edit Profile</h2>
 
-        <form onSubmit={handleUpdate} className="space-y-4">
-          {editProfileInputs.map(
-            ({ label, name, type, placeholder, disabled }) =>
-              type === "textarea" ? (
-                <div key={name}>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {label}
-                  </label>
-                  <textarea
-                    name={name}
-                    value={formData[name as keyof typeof formData] || ""}
-                    onChange={handleChange}
-                    rows={4}
-                    className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                    placeholder={placeholder}
-                  />
-                </div>
-              ) : (
-                <CustomInput
-                  key={name}
-                  label={label}
-                  name={name}
-                  type={type}
-                  value={formData[name as keyof typeof formData] || ""}
-                  onChange={handleChange}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {editProfileInputs.map(({ label, name, type, placeholder, disabled }) =>
+            type === "textarea" ? (
+              <div key={name}>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {label}
+                </label>
+                <textarea
+                  {...(control.register && (control as any).register(name))}
+                  rows={4}
                   placeholder={placeholder}
                   disabled={disabled}
+                  className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary"
                 />
-              )
+              </div>
+            ) : (
+              <CustomInput
+                key={name}
+                name={name}
+                control={control}
+                label={label}
+                type={type}
+                placeholder={placeholder}
+                disabled={disabled}
+              />
+            )
           )}
 
           <CustomButton
             type="submit"
-            disabled={isUpdating}
+            disabled={isUpdating || isSubmitting}
             className="w-full bg-primary text-white py-2 rounded-md hover:bg-opacity-90 transition"
           >
-            {isUpdating ? "Saving..." : "Update Profile"}
+            {isUpdating || isSubmitting ? "Saving..." : "Update Profile"}
           </CustomButton>
         </form>
       </div>
