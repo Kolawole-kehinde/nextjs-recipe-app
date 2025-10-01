@@ -1,14 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 
-// GET: fetch current logged-in user
+// GET: fetch current user profile
 export async function GET() {
   const supabase = await createClient();
-
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
 
   if (authError || !user) {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
@@ -32,10 +28,7 @@ export async function PUT(req: Request) {
   const supabase = await createClient();
   const body = await req.json();
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
 
   if (authError || !user) {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });

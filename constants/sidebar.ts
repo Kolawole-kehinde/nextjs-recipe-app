@@ -20,7 +20,7 @@ export const navigation = [
     name: "Account",
     icon: User,
     children: [
-      { name: "Profile", href: "/account/profile", icon: User },
+      { name: "Profile", href: "/profile", icon: User },
       { name: "Logout", href: "/logout", icon: LogOut },
     ],
   },

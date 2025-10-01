@@ -1,26 +1,22 @@
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import axios from "axios";
-import { uploadAvatar } from "@/lib/cloudinary";
 
-// Get user profile
+
+// Fetch current logged-in user
 export const fetchProfile = async () => {
   const { data } = await axios.get("/api/profile");
   return data;
 };
 
-// Update user profile
+// Update current logged-in user
 export const updateProfile = async (profileData: any) => {
   const { data } = await axios.put("/api/profile", profileData);
   return data;
 };
 
-// Update profile avatar
-export const updateAvatar = async (file: File, userId: string) => {
-  const imageUrl = await uploadAvatar(file);
-
-  await axios.put("/api/profile", {
-    id: userId,
-    avatar: imageUrl,
-  });
-
-  return imageUrl;
+// Upload avatar + update profile
+export const updateAvatar = async (file: File) => {
+  const imageUrl = await uploadToCloudinary(file);
+  const { data } = await axios.put("/api/profile", { avatar: imageUrl });
+  return data.user;
 };

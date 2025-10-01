@@ -1,5 +1,4 @@
-import axios from "axios";
-export const uploadAvatar = async (file: File) => {
+export async function uploadToCloudinary(file: File): Promise<string> {
   const formData = new FormData();
   formData.append("file", file);
   formData.append(
@@ -7,10 +6,13 @@ export const uploadAvatar = async (file: File) => {
     process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
   );
 
-  const { data } = await axios.post(
+  const res = await fetch(
     `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-    formData
+    { method: "POST", body: formData }
   );
 
-  return data.secure_url as string; // Cloudinary image URL
-};
+  const data = await res.json();
+  if (!data.secure_url) throw new Error("Failed to upload to Cloudinary");
+
+  return data.secure_url;
+}
