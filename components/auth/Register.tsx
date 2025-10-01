@@ -8,6 +8,9 @@ import CustomButton from "../CustomButton";
 import { RegisterLists } from "@/constants/auth";
 import { RegisterSchema, RegisterType } from "@/Schema/auth";
 import { useRegister } from "@/hooks/auth/useAuth";
+import { z } from "zod";
+
+
 
 const RegisterPage = () => {
   const {
@@ -19,7 +22,7 @@ const RegisterPage = () => {
     defaultValues: {
       name: "",
       email: "",
-      gender: undefined,
+      gender: undefined, 
       password: "",
       confirmPassword: "",
     },
@@ -43,7 +46,7 @@ const RegisterPage = () => {
             <CustomInput
               key={name}
               name={name}
-              type={type}
+              type={type as any} 
               placeholder={placeholder}
               options={options}
               control={control}
