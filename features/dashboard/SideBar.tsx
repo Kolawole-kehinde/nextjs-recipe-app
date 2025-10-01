@@ -29,7 +29,7 @@ export function Sidebar() {
         <div className="hidden lg:block absolute -right-3 top-8">
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="w-6 h-6 bg-[#fff4f0] text-black rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+            className="w-6 h-6 bg-[#fff4f0] text-black rounded-full shadow-lg flex items-center justify-center hover:bg-[#e5ebf1] transition-colors"
           >
             {isCollapsed ? (
               <ChevronRight className="w-4 h-4" />

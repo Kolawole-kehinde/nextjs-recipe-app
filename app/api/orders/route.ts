@@ -1,11 +1,9 @@
-// app/api/orders/route.ts
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 
 export async function GET() {
   try {
     const supabase = await createClient();
-
     const {
       data: { user },
       error: userError,
@@ -15,13 +13,12 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // ✅ Fetch order + items + products
+   
     const { data, error } = await supabase
       .from("orders")
       .select(`
         id,
         order_status,
-       
         created_at,
         total_price,
         order_items (
