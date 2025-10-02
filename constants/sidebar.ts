@@ -13,7 +13,7 @@ import {
 export const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
   { name: "My Orders", href: "/orders", icon: Package },
-  { name: "Favorites", href: "/favorite", icon: Heart },
+  { name: "Wishlist", href: "/wishlist", icon: Heart },
   { name: "Reviews", href: "/reviews", icon: Star },
 
   {

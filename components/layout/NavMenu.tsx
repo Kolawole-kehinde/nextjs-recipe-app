@@ -48,8 +48,8 @@ const NavMenu: React.FC<NavMenuProps> = ({ orderId, isMobile }) => {
       ),
     },
     {
-      to: "/favorites",
-      label: "Favorites",
+      to: "/wishlist",
+      label: "Wishlist",
       icon: (
         <div className="relative">
           <Heart size={20} />

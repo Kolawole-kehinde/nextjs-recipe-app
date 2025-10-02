@@ -5,11 +5,16 @@ import { usePathname } from "next/navigation";
 import { Menu, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { navigation } from "@/constants/sidebar";
+import { useLogout } from "@/hooks/auth/useAuth";
+import { AlertDialog } from "@/components/shared/AlertDialog";
+
 
 export function Sidebar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const { mutate: logout } = useLogout();
 
   return (
     <section className="bg-[#fff4f0] rounded-2xl">
@@ -46,14 +51,12 @@ export function Sidebar() {
               (pathname === item.href ||
                 (item.href === "/orders" && pathname.startsWith("/orders")));
 
-            // 🔑 Add spacing before Account
-            const wrapperClasses =
-              item.name === "Account" ? "mt-40" : "";
+            const wrapperClasses = item.name === "Account" ? "mt-40" : "";
 
             if (item.children) {
               return (
                 <div key={item.name} className={wrapperClasses}>
-                  {/* Parent label */}
+                  {/* Parent */}
                   <div
                     className={`flex items-center gap-3 rounded-lg text-sm font-medium text-black/80 
                       ${isCollapsed ? "lg:px-2 lg:py-3 lg:justify-center" : "px-4 py-3"}`}
@@ -65,18 +68,45 @@ export function Sidebar() {
                   </div>
 
                   {/* Children */}
-                  <div className={`ml-6 space-y-1 ${isCollapsed ? "lg:hidden" : ""}`}>
+                  <div
+                    className={`ml-6 space-y-1 ${isCollapsed ? "lg:hidden" : ""}`}
+                  >
                     {item.children.map((child) => {
                       const childActive = pathname === child.href;
+
+                      // ✅ Special handling for Logout
+                      if (child.name === "Logout") {
+                        return (
+                          <button
+                            key={child.name}
+                            onClick={() => {
+                              setIsMobileMenuOpen(false);
+                              setLogoutDialogOpen(true);
+                            }}
+                            className={`flex items-center gap-2 rounded-lg text-sm px-3 py-2 w-full text-left transition-colors
+                              ${
+                                childActive
+                                  ? "bg-orange-600/35 text-black"
+                                  : "text-black/70 hover:text-black hover:bg-black/10"
+                              }`}
+                          >
+                            <child.icon className="w-4 h-4" />
+                            {child.name}
+                          </button>
+                        );
+                      }
+
                       return (
                         <Link
                           key={child.name}
                           href={child.href}
                           onClick={() => setIsMobileMenuOpen(false)}
                           className={`flex items-center gap-2 rounded-lg text-sm px-3 py-2 transition-colors
-                            ${childActive
-                              ? "bg-orange-600/35 text-black"
-                              : "text-black/70 hover:text-black hover:bg-black/10"}`}
+                            ${
+                              childActive
+                                ? "bg-orange-600/35 text-black"
+                                : "text-black/70 hover:text-black hover:bg-black/10"
+                            }`}
                         >
                           <child.icon className="w-4 h-4" />
                           {child.name}
@@ -96,10 +126,12 @@ export function Sidebar() {
                 title={isCollapsed ? item.name : undefined}
                 className={`flex items-center gap-3 rounded-lg text-sm font-medium relative group transition-colors
                   ${isCollapsed ? "lg:px-2 lg:py-3 lg:justify-center" : "px-4 py-3"}
-                  ${isActive
-                    ? "bg-orange-600/35 text-black"
-                    : "text-black/80 hover:text-black hover:bg-black/10"}
-                  ${wrapperClasses}`} 
+                  ${
+                    isActive
+                      ? "bg-orange-600/35 text-black"
+                      : "text-black/80 hover:text-black hover:bg-black/10"
+                  }
+                  ${wrapperClasses}`}
               >
                 <item.icon className="w-5 h-5 flex-shrink-0" />
                 <span className={`${isCollapsed ? "lg:hidden" : ""}`}>
@@ -110,6 +142,17 @@ export function Sidebar() {
           })}
         </nav>
       </div>
+
+      {/* 🔑 Logout Dialog */}
+      <AlertDialog
+        open={logoutDialogOpen}
+        onOpenChange={setLogoutDialogOpen}
+        title="Logout Confirmation"
+        description="Are you sure you want to log out?"
+        confirmText="Logout"
+        cancelText="Cancel"
+        onConfirm={() => logout()}
+      />
     </section>
   );
 }

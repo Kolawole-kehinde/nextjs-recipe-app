@@ -1,9 +1,11 @@
 import { Input } from '@/components/ui/input'
+import useUserStore from '@/store/useStore';
 import { Search } from 'lucide-react'
 import React from 'react'
 
 
 const DashbordHeader = () => {
+  const user = useUserStore((state) => state.user);
   return (
     <>
          <header className="bg-white border-b px-4 lg:px-6 py-4 ">
@@ -11,7 +13,7 @@ const DashbordHeader = () => {
            <div>
             <h1 className="text-xl lg:text-2xl font-bold text-gray-900">Dashboard</h1>
             <p className="text-sm lg:text-base text-gray-600">
-              Welcome back! Here's what's happening with your orders.
+              Welcome back <span className='font-bold'>{user?.name}!</span> Here's what's happening with your orders.
             </p>
           </div>
 

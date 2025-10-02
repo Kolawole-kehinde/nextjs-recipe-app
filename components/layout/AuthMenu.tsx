@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { useLogout } from "@/hooks/auth/useAuth";
 import useUserStore from "@/store/useStore";
-import { AlertDialog } from "@/components/AlertDialog";
+import { AlertDialog } from "@/components/shared/AlertDialog";
 
 interface AuthMenuProps {
   closeMenu: () => void;
@@ -23,7 +23,7 @@ interface AuthMenuProps {
 
 const AuthMenu: React.FC<AuthMenuProps> = ({ closeMenu, orderId }) => {
   const user = useUserStore((state) => state.user);
-  const { mutateAsync: logout, isPending } = useLogout(); // using mutateAsync so it works well in async confirm
+  const { mutateAsync: logout, isPending } = useLogout(); 
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   return (
