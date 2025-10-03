@@ -53,37 +53,79 @@ export function RecentOrders() {
               </div>
             ))
           ) : isError ? (
-            <div className="text-sm text-red-500">{error?.message || "Error loading orders"}</div>
+            <div className="text-sm text-red-500">
+              {error?.message || "Error loading orders"}
+            </div>
           ) : (
-            orders?.slice(0, 3).map((order: any) => (
-              <div
-                key={order.id}
-                className="flex items-center justify-between p-3 lg:p-4 border rounded-lg"
-              >
-                <div className="flex items-center gap-2 lg:gap-3">
-                  <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <Package className="w-4 h-4 lg:w-5 lg:h-5 text-gray-600" />
+            orders?.slice(0, 3).map((order: Order) => {
+              // ✅ Calculate total items from order_items quantities
+              const itemsCount =
+                order.order_items?.reduce(
+                  (sum, item) => sum + (item.quantity ?? 0),
+                  0
+                ) ?? 0
+
+              return (
+                <div
+                  key={order.id}
+                  className="flex items-center justify-between p-3 lg:p-4 border rounded-lg"
+                >
+                  <div className="flex items-center gap-2 lg:gap-3">
+                    <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <Package className="w-4 h-4 lg:w-5 lg:h-5 text-gray-600" />
+                    </div>
+                    <div>
+                      {/* ✅ Show exact order id from DB */}
+                      <p className="font-medium text-sm lg:text-base">
+                        {order.id}
+                      </p>
+                      <p className="text-xs lg:text-sm text-gray-600">
+                        {itemsCount} {itemsCount === 1 ? "item" : "items"} • $
+                        {order.total_price ?? 0}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-medium text-sm lg:text-base">{order.code}</p>
-                    <p className="text-xs lg:text-sm text-gray-600">
-                      {order.items?.length ?? 0} items • ${order.total_amount ?? 0}
+                  <div className="text-right">
+                    <span
+                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                        order.order_status === "Delivered"
+                          ? "bg-green-100 text-green-800"
+                          : order.order_status === "In Progress"
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {order.order_status}
+                    </span>
+                    <p className="text-xs lg:text-sm text-gray-600 mt-1">
+                      {new Date(order.created_at).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    {order.order_status}
-                  </span>
-                  <p className="text-xs lg:text-sm text-gray-600 mt-1">
-                    {new Date(order.created_at).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-            ))
+              )
+            })
           )}
         </div>
       </CardContent>
     </Card>
   )
+}
+
+// ✅ Updated type matching your API shape
+interface Order {
+  id: string
+  order_status: string
+  created_at: string
+  total_price: number
+  order_items: {
+    id: string
+    quantity: number
+    product_id: string
+    products: {
+      id: string
+      name: string
+      price: number
+      image_url?: string
+    }
+  }[]
 }
