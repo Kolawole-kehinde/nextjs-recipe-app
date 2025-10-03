@@ -1,4 +1,4 @@
-import { DashboardOverview } from "@/features/dashboard";
+import { DashboardOverview } from "@/features/dashboard/DashboardOverview.tsx";
 import { Sidebar } from "@/features/dashboard/SideBar";
 
 
