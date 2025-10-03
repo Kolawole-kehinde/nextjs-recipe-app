@@ -8,12 +8,7 @@ export function useOrder() {
   const user = useUserStore((state) => state.user);
   const queryClient = useQueryClient();
 
-  const {
-    data: orders,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
+  const { data: orders, isLoading, isError, error } = useQuery({
     queryKey: ["orders", user?.id],
     queryFn: fetchOrders,
     enabled: !!user,

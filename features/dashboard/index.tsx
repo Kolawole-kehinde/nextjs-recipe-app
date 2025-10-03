@@ -5,25 +5,37 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 import DashbordHeader from "./dashbord-header"
+import { useOrder } from "@/hooks/useOrders"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export function DashboardOverview() {
+  const { orders, isLoading, isError, error } = useOrder();
+
   return (
     <div className="flex-1 flex flex-col">
        <DashbordHeader/>
       <main className="flex-1 p-4 lg:p-6">
         <div className="space-y-4 lg:space-y-6">
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-xs lg:text-sm font-medium">Total Orders</CardTitle>
-                <Package className="h-3 w-3 lg:h-4 lg:w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-lg lg:text-2xl font-bold">24</div>
-                <p className="text-xs text-muted-foreground">+2 from last month</p>
-              </CardContent>
-            </Card>
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6">
+           <Card>
+  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+    <CardTitle className="text-xs lg:text-sm font-medium">Total Orders</CardTitle>
+    <Package className="h-3 w-3 lg:h-4 lg:w-4 text-muted-foreground" />
+  </CardHeader>
+  <CardContent>
+    {isLoading ? (
+      <Skeleton className="h-6 w-16 rounded" />
+    ) : isError ? (
+      <div className="text-sm text-red-500">{error?.message || "Error"}</div>
+    ) : (
+      <div className="text-lg lg:text-2xl font-bold">
+        {orders?.length ?? 0}
+      </div>
+    )}
+    <p className="text-xs text-muted-foreground">+2 from last month</p>
+  </CardContent>
+</Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -47,7 +59,7 @@ export function DashboardOverview() {
               </CardContent>
             </Card>
 
-            <Card>
+            {/* <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-xs lg:text-sm font-medium">Total Spent</CardTitle>
                 <TrendingUp className="h-3 w-3 lg:h-4 lg:w-4 text-muted-foreground" />
@@ -56,8 +68,11 @@ export function DashboardOverview() {
                 <div className="text-lg lg:text-2xl font-bold">$2,847</div>
                 <p className="text-xs text-muted-foreground">This year</p>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
+
+
+
 
           {/* Recent Orders */}
           <Card>
