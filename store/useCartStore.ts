@@ -5,7 +5,7 @@ import { CartItem, FavoriteItem, BuyNowItem } from "@/types/cart";
 
 interface CartState {
   cartItems: CartItem[];
-  favorites: FavoriteItem[];
+  wishlists: FavoriteItem[];
   buyNow: BuyNowItem | null;
 
   // Cart Actions
@@ -13,8 +13,8 @@ interface CartState {
   removeFromCart: (id: string) => void;
   clearCart: () => void;
 
-  // Favorites Actions
-  toggleFavorite: (item: FavoriteItem) => void;
+  // Wishlist Actions
+  toggleWishlist: (item: FavoriteItem) => void;
 
   // BuyNow Actions
   setBuyNow: (item: BuyNowItem | null) => void;
@@ -24,7 +24,7 @@ export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       cartItems: [],
-      favorites: [],
+      wishlists: [],
       buyNow: null,
 
       addToCart: (item) =>
@@ -47,12 +47,12 @@ export const useCartStore = create<CartState>()(
 
       clearCart: () => set({ cartItems: [] }),
 
-      toggleFavorite: (item) =>
+      toggleWishlist: (item) =>
         set((state) => {
-          const exists = state.favorites.find((f) => f.id === item.id);
+          const exists = state.wishlists.find((f) => f.id === item.id);
           return exists
-            ? { favorites: state.favorites.filter((f) => f.id !== item.id) }
-            : { favorites: [...state.favorites, item] };
+            ? { wishlists: state.wishlists.filter((f) => f.id !== item.id) }
+            : { wishlists: [...state.wishlists, item] };
         }),
 
       setBuyNow: (item) => set({ buyNow: item }),

@@ -10,8 +10,8 @@ import {
   useCartItems,
   useAddToCart,
   useRemoveFromCart,
-  useFavorites,
-  useToggleFavorite,
+  useWishlist,
+  useToggleWishlist,
   useSetBuyNow,
 } from "@/hooks/useCart";
 
@@ -19,8 +19,8 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
   const cartItems = useCartItems();
   const addToCart = useAddToCart();
   const removeFromCart = useRemoveFromCart();
-  const favorites = useFavorites();
-  const toggleFavorite = useToggleFavorite();
+  const wishlist = useWishlist();
+  const toggleWishlist = useToggleWishlist();
   const setBuyNow = useSetBuyNow();
 
   const stringId = String(id);
@@ -29,18 +29,18 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
   const quantityInCart =
     cartItems.find((item) => item.id === stringId)?.quantity || 0;
 
-  // Check if favorite
-  const isFavorite = favorites.some((item) => item.id === stringId);
+  // Check if in wishlist
+  const isInWishlist = wishlist.some((item) => item.id === stringId);
 
   // Product object matching CartItem type
   const product = { id: stringId, name, price, image_url, description };
 
-  const handleToggleFavorite = () => {
-    toggleFavorite(product);
+  const handleToggleWishlist = () => {
+    toggleWishlist(product);
     toast.success(
-      isFavorite
-        ? `${name} removed from favorites`
-        : `${name} added to favorites`
+      isInWishlist
+        ? `${name} removed from wishlist`
+        : `${name} added to wishlist`
     );
   };
 
@@ -68,9 +68,9 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
         {/* Action icons */}
         <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center px-2">
           <Heart
-            onClick={handleToggleFavorite}
+            onClick={handleToggleWishlist}
             className={`text-xl cursor-pointer ${
-              isFavorite ? "fill-red-600 stroke-red-600" : "text-white"
+              isInWishlist ? "fill-red-600 stroke-red-600" : "text-white"
             } hover:stroke-red-600 transition`}
           />
 

@@ -58,13 +58,7 @@ export function RecentOrders() {
             </div>
           ) : (
             orders?.slice(0, 3).map((order: Order) => {
-              // ✅ Calculate total items from order_items quantities
-              const itemsCount =
-                order.order_items?.reduce(
-                  (sum, item) => sum + (item.quantity ?? 0),
-                  0
-                ) ?? 0
-
+              const itemsCount = order.order_items?.reduce((sum, item) => sum + (item.quantity ?? 0), 0) ?? 0
               return (
                 <div
                   key={order.id}
@@ -75,7 +69,6 @@ export function RecentOrders() {
                       <Package className="w-4 h-4 lg:w-5 lg:h-5 text-gray-600" />
                     </div>
                     <div>
-                      {/* ✅ Show exact order id from DB */}
                       <p className="font-medium text-sm lg:text-base">
                         {order.id}
                       </p>
@@ -111,7 +104,7 @@ export function RecentOrders() {
   )
 }
 
-// ✅ Updated type matching your API shape
+
 interface Order {
   id: string
   order_status: string

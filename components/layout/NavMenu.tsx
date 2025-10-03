@@ -11,7 +11,7 @@ import {
   ShoppingCart,
   Heart,
 } from "lucide-react";
-import { useCartCount, useFavoritesCount } from "@/hooks/useCart";
+import { useCartCount, useWishlistCount } from "@/hooks/useCart";
 
 interface NavMenuProps {
   orderId?: string;
@@ -20,7 +20,7 @@ interface NavMenuProps {
 
 const NavMenu: React.FC<NavMenuProps> = ({ orderId, isMobile }) => {
   const cartCount = useCartCount();
-  const favoritesCount = useFavoritesCount();
+  const wishlistCount = useWishlistCount();
   const pathname = usePathname();
 
   const baseClass =
@@ -53,9 +53,9 @@ const NavMenu: React.FC<NavMenuProps> = ({ orderId, isMobile }) => {
       icon: (
         <div className="relative">
           <Heart size={20} />
-          {favoritesCount > 0 && (
+          {wishlistCount > 0 && (
             <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
-              {favoritesCount}
+              {wishlistCount}
             </span>
           )}
         </div>
