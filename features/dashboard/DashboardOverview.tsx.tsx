@@ -6,6 +6,7 @@ import DashbordHeader from "./dashbord-header"
 import { useOrder } from "@/hooks/useOrders"
 import { Skeleton } from "@/components/ui/skeleton"
 import { RecentOrders } from "./RecentOrders"
+import { useMemo } from "react"
 
 export function DashboardOverview() {
   const { orders, isLoading, isError, error } = useOrder()
@@ -14,9 +15,17 @@ export function DashboardOverview() {
   const inProgressOrders = orders?.filter((o: Order) => o.order_status === "In Progress").length ?? 0
   const wishlistItems = orders?.filter((o: Order) => o.is_wishlist).length ?? 0
 
+
+  const filteredWishlist = useMemo(() => {
+      if (!searchQuery) return wishlist
+      return wishlist.filter((food) =>
+        food.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }, [wishlist, searchQuery])
+
   return (
     <div className="flex-1 flex flex-col">
-      <DashbordHeader />
+      <DashbordHeader onSearch={setSearchQuery} />
       <main className="flex-1 p-4 lg:p-6">
         <div className="space-y-4 lg:space-y-6">
 
