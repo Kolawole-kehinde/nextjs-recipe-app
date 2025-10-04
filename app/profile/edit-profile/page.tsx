@@ -1,4 +1,4 @@
-import EditProfile from '@/features/profile/EditProfile'
+import EditProfile from '@/features/account/profile/EditProfile'
 import React from 'react'
 
 const Page = () => {

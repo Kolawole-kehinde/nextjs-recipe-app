@@ -1,31 +1,25 @@
 "use client"
-
 import { Package, Heart, Clock } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import DashbordHeader from "./dashbord-header"
 import { useOrder } from "@/hooks/useOrders"
 import { Skeleton } from "@/components/ui/skeleton"
 import { RecentOrders } from "./RecentOrders"
-import { useMemo } from "react"
+
 
 export function DashboardOverview() {
   const { orders, isLoading, isError, error } = useOrder()
 
   const totalOrders = orders?.length ?? 0
   const inProgressOrders = orders?.filter((o: Order) => o.order_status === "In Progress").length ?? 0
-  const wishlistItems = orders?.filter((o: Order) => o.is_wishlist).length ?? 0
+  const deliveredItems = orders?.filter((o: Order) => o.order_status === "Delivered").length ?? 0
 
 
-  const filteredWishlist = useMemo(() => {
-      if (!searchQuery) return wishlist
-      return wishlist.filter((food) =>
-        food.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    }, [wishlist, searchQuery])
+ 
 
   return (
     <div className="flex-1 flex flex-col">
-      <DashbordHeader onSearch={setSearchQuery} />
+      <DashbordHeader />
       <main className="flex-1 p-4 lg:p-6">
         <div className="space-y-4 lg:space-y-6">
 
@@ -33,7 +27,7 @@ export function DashboardOverview() {
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6">
 
             {/* Total Orders */}
-            <Card>
+            <Card className="bg-[#dbeafe]">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 {isLoading ? (
                   <Skeleton className="h-4 w-20" />
@@ -65,7 +59,7 @@ export function DashboardOverview() {
             </Card>
 
             {/* In Progress */}
-            <Card>
+            <Card className="bg-[#fef9c3]">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 {isLoading ? (
                   <Skeleton className="h-4 w-24" />
@@ -95,12 +89,12 @@ export function DashboardOverview() {
             </Card>
 
             {/* Wishlist */}
-            <Card>
+            <Card className="bg-[#dcfce7]">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 {isLoading ? (
                   <Skeleton className="h-4 w-28" />
                 ) : (
-                  <CardTitle className="text-xs lg:text-sm font-medium">Wishlist Items</CardTitle>
+                  <CardTitle className="text-xs lg:text-sm font-medium">Delivered</CardTitle>
                 )}
 
                 {isLoading ? (
@@ -117,8 +111,8 @@ export function DashboardOverview() {
                   </>
                 ) : (
                   <>
-                    <div className="text-lg lg:text-2xl font-bold">{wishlistItems}</div>
-                    <p className="text-xs text-muted-foreground">Items saved</p>
+                    <div className="text-lg lg:text-2xl font-bold">{deliveredItems}</div>
+                    <p className="text-xs text-muted-foreground">Items Delivered</p>
                   </>
                 )}
               </CardContent>
