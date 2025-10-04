@@ -31,8 +31,8 @@ const AccountSettings = () => {
                 <p className="font-medium text-gray-800">Change Password</p>
                 <p className="text-sm text-gray-500">Update your login password</p>
               </div>
-              <Link href="/change-password">
-                <button className="px-4 py-2 bg-primary text-white rounded-md hover:bg-opacity-90 text-sm">
+              <Link href="/account-settings/change-password">
+                <button className="px-4 py-2 bg-primary text-white rounded-md hover:bg-opacity-90 text-sm cursor-pointer">
                   Change
                 </button>
               </Link>
