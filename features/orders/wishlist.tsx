@@ -2,12 +2,12 @@
 
 import { Button } from "@/components/ui/button"
 import { Heart, ShoppingCart } from "lucide-react"
-import { useWishlist, useToggleWishlist, useAddToCart } from "@/hooks/useCart"
-import { toast } from "sonner"
-import DashbordHeader from "@/features/dashboard/dashbord-header"
-import FoodItems from "@/components/FoodItems"
-import { RecommendedDishes } from "@/components/LadingPage/RecommendedDishes"
 import Link from "next/link"
+import FoodItems from "@/components/FoodItems"
+import DashboardHeader from "../dashboard/dashbord-header"
+import { RecommendedDishes } from "@/components/LadingPage/RecommendedDishes"
+import { useWishlist, useToggleWishlist, useAddToCart } from "@/hooks/useCart"
+import { notify } from "@/helpers/notifications"
 
 export function WishlistItems() {
   const wishlist = useWishlist()
@@ -16,25 +16,18 @@ export function WishlistItems() {
 
   const handleRemove = (food: any) => {
     toggleWishlist(food)
-    toast.success(`${food.name} removed from wishlist`)
-  }
-
-  const handleAddToCart = (food: any) => {
-    addToCart({ ...food, quantity: 1 })
-    toast.success(`${food.name} added to cart`)
+    notify.wishlist.removed(food.name)
   }
 
   const handleAddAllToCart = () => {
     wishlist.forEach((food) => addToCart({ ...food, quantity: 1 }))
-    toast.success("All wishlist items added to cart")
+    notify.cart.allAdded()
   }
 
   return (
     <div className="flex-1 flex flex-col">
-      {/* Header */}
-      <DashbordHeader />
+      <DashboardHeader />
 
-      {/* Main Content */}
       <main className="flex-1 p-6">
         <div className="space-y-6">
           {/* Top header */}
@@ -60,13 +53,12 @@ export function WishlistItems() {
                 <FoodItems
                   key={food.id}
                   {...food}
-                  onRemove={() => handleRemove(food)}   // 👈 remove button
-                  isInWishlistPage                    // 👈 show remove icon in top-right
+                  onRemove={() => handleRemove(food)}
+                  showRemoveButton
                 />
               ))}
             </div>
           ) : (
-            // Empty State
             <div className="text-center py-12">
               <Heart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -76,7 +68,7 @@ export function WishlistItems() {
                 Save food items you love to buy them later
               </p>
               <Link href="/">
-                <Button>Start Shopping</Button>
+                <Button className="bg-orange-500">Start Shopping</Button>
               </Link>
             </div>
           )}

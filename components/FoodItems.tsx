@@ -1,87 +1,68 @@
-"use client";
+"use client"
 
-import React from "react";
-import { Heart, Plus, X } from "lucide-react";
-import toast from "react-hot-toast";
-import Link from "next/link";
-import Image from "next/image";
-import { FoodItemProps } from "@/types/products";
-import {
-  useCartItems,
-  useAddToCart,
-  useRemoveFromCart,
-  useWishlist,
-  useToggleWishlist,
-  useSetBuyNow,
-} from "@/hooks/useCart";
+import React from "react"
+import { Heart, Plus, X } from "lucide-react"
+import Link from "next/link"
+import Image from "next/image"
+import { FoodItemProps } from "@/types/products"
+import {useCartItems,useAddToCart,useRemoveFromCart,useWishlist,useToggleWishlist,useSetBuyNow,} from "@/hooks/useCart"
+import { notify } from "@/helpers/notifications"
 
 type Props = FoodItemProps & {
-  onRemove?: () => void; // 👈 optional prop for wishlist
-  isInWishlistPage?: boolean; // 👈 flag to show remove button only on wishlist
-};
+  onRemove?: () => void
+  showRemoveButton?: boolean
+}
 
-const FoodItems = ({
-  id,
-  name,
-  price,
-  image_url,
-  description,
-  onRemove,
-  isInWishlistPage = false,
+const FoodItems = ({id,name,price,image_url,description,onRemove, showRemoveButton = false,
 }: Props) => {
-  const cartItems = useCartItems();
-  const addToCart = useAddToCart();
-  const removeFromCart = useRemoveFromCart();
-  const wishlist = useWishlist();
-  const toggleWishlist = useToggleWishlist();
-  const setBuyNow = useSetBuyNow();
+  const cartItems = useCartItems()
+  const addToCart = useAddToCart()
+  const removeFromCart = useRemoveFromCart()
+  const wishlist = useWishlist()
+  const toggleWishlist = useToggleWishlist()
+  const setBuyNow = useSetBuyNow()
 
-  const stringId = String(id);
+  const stringId = String(id)
 
-  // Quantity in cart
   const quantityInCart =
-    cartItems.find((item) => item.id === stringId)?.quantity || 0;
+    cartItems.find((item) => item.id === stringId)?.quantity || 0
 
-  // Check if in wishlist
-  const isInWishlist = wishlist.some((item) => item.id === stringId);
+  const isInWishlist = wishlist.some((item) => item.id === stringId)
 
-  // Product object matching CartItem type
   const product = {
     id: stringId,
     name,
     price,
     image_url: image_url ?? "",
     description: description ?? "",
-  };
+  }
 
   const handleToggleWishlist = () => {
-    toggleWishlist(product);
-    toast.success(
-      isInWishlist
-        ? `${name} removed from wishlist`
-        : `${name} added to wishlist`
-    );
-  };
+    toggleWishlist(product)
+    isInWishlist ? notify.wishlist.removed(name) : notify.wishlist.added(name)
+  }
 
-  const handleAddToCart = () => addToCart({ ...product, quantity: 1 });
+  const handleAddToCart = () => {
+    addToCart({ ...product, quantity: 1 })
+    notify.cart.added(name)
+  }
 
   const handleBuyNow = () => {
-    setBuyNow({ ...product, quantity: 1 });
-    toast.success(`${name} ready to buy`);
-  };
+    setBuyNow({ ...product, quantity: 1 })
+    notify.buyNow(name)
+  }
 
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition relative">
       {/* Remove icon (only for wishlist page) */}
-     {isInWishlistPage && onRemove && (
-  <button
-    onClick={onRemove}
-    className="absolute top-2 right-2 z-20 p-1 rounded-full bg-white shadow hover:bg-red-100 text-gray-600 hover:text-red-600 transition"
-  >
-    <X className="w-4 h-4" />
-  </button>
-)}
-
+      {showRemoveButton && onRemove && (
+        <button
+          onClick={onRemove}
+          className="absolute top-2 right-2 z-20 p-1 rounded-full bg-white shadow hover:bg-red-100 text-gray-600 hover:text-red-600 transition"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      )}
 
       <div className="relative">
         <Link href={`/product-details/${stringId}`}>
@@ -112,7 +93,10 @@ const FoodItems = ({
           ) : (
             <div className="flex items-center gap-2 bg-white p-2 rounded-full shadow-md">
               <img
-                onClick={() => removeFromCart(stringId)}
+                onClick={() => {
+                  removeFromCart(stringId)
+                  notify.cart.removed(name)
+                }}
                 src="/images/remove_icon_red.png"
                 alt="Remove item"
                 className="w-7 cursor-pointer"
@@ -145,7 +129,7 @@ const FoodItems = ({
         <p className="text-primary font-bold">${price}</p>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FoodItems;
+export default FoodItems
