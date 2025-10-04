@@ -1,21 +1,11 @@
 
-export interface Product {
-  id: string | number;
+export interface FoodItemProps {
+  id: string;
   name: string;
   price: number;
-  image_url?: string;    
-  description?: string; 
-  [key: string]: any;    
+  image_url?: string;
+  description?: string;
+  onRemove?: () => void;
+  onAddToCart?: () => void;
+  isInWishlist?: boolean;
 }
-
-
-export type FoodItemProps = {
-  id: string | number;
-  name: string;
-  price: number;
-  image_url: string;
-  description: string;
-};
-
-
-

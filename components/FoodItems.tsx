@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Heart, Plus } from "lucide-react";
+import { Heart, Plus, X } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import Image from "next/image";
@@ -15,7 +15,20 @@ import {
   useSetBuyNow,
 } from "@/hooks/useCart";
 
-const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) => {
+type Props = FoodItemProps & {
+  onRemove?: () => void; // 👈 optional prop for wishlist
+  isInWishlistPage?: boolean; // 👈 flag to show remove button only on wishlist
+};
+
+const FoodItems = ({
+  id,
+  name,
+  price,
+  image_url,
+  description,
+  onRemove,
+  isInWishlistPage = false,
+}: Props) => {
   const cartItems = useCartItems();
   const addToCart = useAddToCart();
   const removeFromCart = useRemoveFromCart();
@@ -33,7 +46,13 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
   const isInWishlist = wishlist.some((item) => item.id === stringId);
 
   // Product object matching CartItem type
-  const product = { id: stringId, name, price, image_url, description };
+  const product = {
+    id: stringId,
+    name,
+    price,
+    image_url: image_url ?? "",
+    description: description ?? "",
+  };
 
   const handleToggleWishlist = () => {
     toggleWishlist(product);
@@ -52,11 +71,22 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition">
+    <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition relative">
+      {/* Remove icon (only for wishlist page) */}
+     {isInWishlistPage && onRemove && (
+  <button
+    onClick={onRemove}
+    className="absolute top-2 right-2 z-20 p-1 rounded-full bg-white shadow hover:bg-red-100 text-gray-600 hover:text-red-600 transition"
+  >
+    <X className="w-4 h-4" />
+  </button>
+)}
+
+
       <div className="relative">
         <Link href={`/product-details/${stringId}`}>
           <Image
-            src={image_url}
+            src={image_url ?? "/images/placeholder.png"}
             alt={name}
             className="w-full h-48 object-cover rounded-t-xl"
             width={500}
@@ -113,14 +143,6 @@ const FoodItems = ({ id, name, price, image_url, description }: FoodItemProps) =
         </div>
         <p className="text-sm text-gray-600">{description}</p>
         <p className="text-primary font-bold">${price}</p>
-
-        {/* Buy Now button */}
-        {/* <button
-          onClick={handleBuyNow}
-          className="mt-2 w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-1 rounded-md shadow-md"
-        >
-          Buy Now
-        </button> */}
       </div>
     </div>
   );

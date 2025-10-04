@@ -6,7 +6,8 @@ import { useWishlist, useToggleWishlist, useAddToCart } from "@/hooks/useCart"
 import { toast } from "sonner"
 import DashbordHeader from "@/features/dashboard/dashbord-header"
 import FoodItems from "@/components/FoodItems"
-
+import { RecommendedDishes } from "@/components/LadingPage/RecommendedDishes"
+import Link from "next/link"
 
 export function WishlistItems() {
   const wishlist = useWishlist()
@@ -59,9 +60,8 @@ export function WishlistItems() {
                 <FoodItems
                   key={food.id}
                   {...food}
-                  onRemove={() => handleRemove(food)}
-                  onAddToCart={() => handleAddToCart(food)}
-                  isInWishlist
+                  onRemove={() => handleRemove(food)}   // 👈 remove button
+                  isInWishlistPage                    // 👈 show remove icon in top-right
                 />
               ))}
             </div>
@@ -75,11 +75,15 @@ export function WishlistItems() {
               <p className="text-gray-600 mb-4">
                 Save food items you love to buy them later
               </p>
-              <Button>Start Shopping</Button>
+              <Link href="/">
+                <Button>Start Shopping</Button>
+              </Link>
             </div>
           )}
         </div>
       </main>
+
+      <RecommendedDishes />
     </div>
   )
 }
