@@ -5,7 +5,6 @@ import useUserStore from "@/store/useStore";
 import { Search } from "lucide-react";
 import React from "react";
 
-
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   title = "Dashboard",
   subtitle,
@@ -19,15 +18,14 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
     <header className="bg-white border-b px-4 lg:px-6 py-4">
       <div className="flex flex-col md:flex-row items-center justify-between">
         <div>
-          <h1 className="text-xl lg:text-2xl font-bold text-gray-900">
-            {title}
-          </h1>
+          <h1 className="text-xl lg:text-2xl font-bold text-gray-900">{title}</h1>
           <p className="text-sm lg:text-base text-gray-600">
-            {subtitle ||
+            {subtitle || (
               <>
                 Welcome back <span className="font-bold">{user?.name}!</span>{" "}
                 Here’s what’s happening with your orders.
-              </>}
+              </>
+            )}
           </p>
         </div>
 
@@ -59,4 +57,3 @@ interface DashboardHeaderProps {
   searchQuery?: string;
   onSearchChange?: (value: string) => void;
 }
-

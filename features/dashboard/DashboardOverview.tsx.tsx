@@ -1,38 +1,50 @@
 "use client"
+
+import { useState } from "react"
 import { Package, Heart, Clock } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import DashbordHeader from "./dashbord-header"
+import DashboardHeader from "./dashbord-header"
 import { useOrder } from "@/hooks/useOrders"
 import { Skeleton } from "@/components/ui/skeleton"
 import { RecentOrders } from "./RecentOrders"
 
-
 export function DashboardOverview() {
   const { orders, isLoading, isError, error } = useOrder()
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value)
+    console.log("Search input:", value)
+  }
 
   const totalOrders = orders?.length ?? 0
-  const inProgressOrders = orders?.filter((o: Order) => o.order_status === "In Progress").length ?? 0
-  const deliveredItems = orders?.filter((o: Order) => o.order_status === "Delivered").length ?? 0
-
-
- 
+  const inProgressOrders =
+    orders?.filter((o: Order) => o.order_status === "In Progress").length ?? 0
+  const deliveredItems =
+    orders?.filter((o: Order) => o.order_status === "Delivered").length ?? 0
 
   return (
     <div className="flex-1 flex flex-col">
-      <DashbordHeader title="Dashboard" />
+      <DashboardHeader
+        title="Dashboard"
+        searchPlaceholder="Search orders, products..."
+        searchQuery={searchQuery}
+        onSearchChange={handleSearchChange}
+      />
+
       <main className="flex-1 p-4 lg:p-6">
         <div className="space-y-4 lg:space-y-6">
-
           {/* Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6">
-
             {/* Total Orders */}
             <Card className="bg-[#dbeafe]">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 {isLoading ? (
                   <Skeleton className="h-4 w-20" />
                 ) : (
-                  <CardTitle className="text-xs lg:text-sm font-medium">Total Orders</CardTitle>
+                  <CardTitle className="text-xs lg:text-sm font-medium">
+                    Total Orders
+                  </CardTitle>
                 )}
 
                 {isLoading ? (
@@ -48,11 +60,17 @@ export function DashboardOverview() {
                     <Skeleton className="h-3 w-24 mt-2" />
                   </>
                 ) : isError ? (
-                  <div className="text-sm text-red-500">{error?.message || "Error"}</div>
+                  <div className="text-sm text-red-500">
+                    {error?.message || "Error"}
+                  </div>
                 ) : (
                   <>
-                    <div className="text-lg lg:text-2xl font-bold">{totalOrders}</div>
-                    <p className="text-xs text-muted-foreground">+2 from last month</p>
+                    <div className="text-lg lg:text-2xl font-bold">
+                      {totalOrders}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      +2 from last month
+                    </p>
                   </>
                 )}
               </CardContent>
@@ -64,7 +82,9 @@ export function DashboardOverview() {
                 {isLoading ? (
                   <Skeleton className="h-4 w-24" />
                 ) : (
-                  <CardTitle className="text-xs lg:text-sm font-medium">In Progress</CardTitle>
+                  <CardTitle className="text-xs lg:text-sm font-medium">
+                    In Progress
+                  </CardTitle>
                 )}
 
                 {isLoading ? (
@@ -81,20 +101,26 @@ export function DashboardOverview() {
                   </>
                 ) : (
                   <>
-                    <div className="text-lg lg:text-2xl font-bold">{inProgressOrders}</div>
-                    <p className="text-xs text-muted-foreground">Currently processing</p>
+                    <div className="text-lg lg:text-2xl font-bold">
+                      {inProgressOrders}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Currently processing
+                    </p>
                   </>
                 )}
               </CardContent>
             </Card>
 
-            {/* Wishlist */}
+            {/* Delivered */}
             <Card className="bg-[#dcfce7]">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 {isLoading ? (
                   <Skeleton className="h-4 w-28" />
                 ) : (
-                  <CardTitle className="text-xs lg:text-sm font-medium">Delivered</CardTitle>
+                  <CardTitle className="text-xs lg:text-sm font-medium">
+                    Delivered
+                  </CardTitle>
                 )}
 
                 {isLoading ? (
@@ -111,13 +137,16 @@ export function DashboardOverview() {
                   </>
                 ) : (
                   <>
-                    <div className="text-lg lg:text-2xl font-bold">{deliveredItems}</div>
-                    <p className="text-xs text-muted-foreground">Items Delivered</p>
+                    <div className="text-lg lg:text-2xl font-bold">
+                      {deliveredItems}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Items Delivered
+                    </p>
                   </>
                 )}
               </CardContent>
             </Card>
-
           </div>
 
           {/* Recent Orders */}
@@ -137,4 +166,3 @@ export interface Order {
   items?: { id: string; name: string }[]
   is_wishlist?: boolean
 }
-

@@ -8,13 +8,18 @@ import DashboardHeader from "../dashboard/dashbord-header";
 import { RecommendedDishes } from "@/components/LadingPage/RecommendedDishes";
 import { useWishlist, useToggleWishlist, useAddToCart } from "@/hooks/useCart";
 import { notify } from "@/helpers/notifications";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 export function WishlistItems() {
   const wishlist = useWishlist();
   const toggleWishlist = useToggleWishlist();
   const addToCart = useAddToCart();
   const [search, setSearch] = useState("");
+
+  // ✅ Log each time search changes
+  useEffect(() => {
+    console.log("Wishlist search input:", search);
+  }, [search]);
 
   const handleRemove = (food: any) => {
     toggleWishlist(food);
@@ -26,8 +31,8 @@ export function WishlistItems() {
     notify.cart.allAdded();
   };
 
-  // Filter wishlist by search term
-  const filteredWishlist = useMemo(() => {if (!search.trim()) return wishlist;
+  const filteredWishlist = useMemo(() => {
+    if (!search.trim()) return wishlist;
     return wishlist.filter((item) =>
       item.name.toLowerCase().includes(search.toLowerCase())
     );
@@ -44,12 +49,13 @@ export function WishlistItems() {
 
       <main className="flex-1 p-6">
         <div className="space-y-6">
-          {/* Top header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Heart className="w-6 h-6 text-gray-800" />
               <h1 className="text-2xl font-bold text-gray-900">Wishlist</h1>
-              <span className="text-gray-600">({filteredWishlist.length} items)</span>
+              <span className="text-gray-600">
+                ({filteredWishlist.length} items)
+              </span>
             </div>
 
             {wishlist.length > 0 && (
@@ -60,7 +66,6 @@ export function WishlistItems() {
             )}
           </div>
 
-          {/* Wishlist Items */}
           {filteredWishlist.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredWishlist.map((food) => (
