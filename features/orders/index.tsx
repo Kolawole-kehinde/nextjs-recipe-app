@@ -1,50 +1,49 @@
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-// import { Package, Truck, CheckCircle, XCircle } from "lucide-react"
+"use client";
 
-// export function OrdersOverview() {
-//   const stats = [
-//     {
-//       title: "Total Orders",
-//       value: "24",
-//       icon: Package,
-//       color: "text-foreground",
-//     },
-//     {
-//       title: "In Progress",
-//       value: "8",
-//       icon: Truck,
-//       color: "text-chart-2",
-//     },
-//     {
-//       title: "Delivered",
-//       value: "14",
-//       icon: CheckCircle,
-//       color: "text-chart-1",
-//     },
-//     {
-//       title: "Cancelled",
-//       value: "2",
-//       icon: XCircle,
-//       color: "text-chart-3",
-//     },
-//   ]
+import { OrdersTabs } from "./order-tabs";
+import DashbordHeader from "../dashboard/dashbord-header";
+import { useOrder } from "@/hooks/useOrders";
+import { useState, useMemo } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 
-//   return (
-//     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-//       {stats.map((stat) => {
-//         const Icon = stat.icon
-//         return (
-//           <Card key={stat.title} className="transition-all hover:shadow-md">
-//             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-//               <CardTitle className="text-sm font-medium text-muted-foreground">{stat.title}</CardTitle>
-//               <Icon className={`h-5 w-5 ${stat.color}`} />
-//             </CardHeader>
-//             <CardContent>
-//               <div className="text-2xl font-bold">{stat.value}</div>
-//             </CardContent>
-//           </Card>
-//         )
-//       })}
-//     </div>
-//   )
-// }
+export function MainContent() {
+  const { orders, isLoading } = useOrder();
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 600);
+
+  // ✅ Log only after debounce delay
+  console.log("🕓 Debounced Orders search:", debouncedSearch);
+
+  const filteredOrders = useMemo(() => {
+    if (!debouncedSearch.trim()) return orders;
+    return orders?.filter((order: any) =>
+      order.id.toLowerCase().includes(debouncedSearch.toLowerCase())
+    );
+  }, [orders, debouncedSearch]);
+
+  return (
+    <div className="flex-1 flex flex-col">
+      <DashbordHeader
+        title="My Orders"
+        searchPlaceholder="Search orders..."
+        searchQuery={search}
+        onSearchChange={setSearch}
+      />
+
+      <main className="flex-1 p-4 lg:p-6">
+        <div className="space-y-4 lg:space-y-6">
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 lg:w-6 lg:h-6 bg-gray-800 rounded flex items-center justify-center">
+              <div className="w-2.5 h-2.5 lg:w-3 lg:h-3 border border-gray-400 rounded-sm" />
+            </div>
+            <h1 className="text-xl lg:text-2xl font-bold text-gray-900">
+              Orders
+            </h1>
+          </div>
+
+          <OrdersTabs orders={filteredOrders} isLoading={isLoading} />
+        </div>
+      </main>
+    </div>
+  );
+}
