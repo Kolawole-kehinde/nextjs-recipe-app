@@ -3,16 +3,26 @@
 import { Input } from "@/components/ui/input";
 import useUserStore from "@/store/useStore";
 import { Search } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
+
 
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   title = "Dashboard",
   subtitle,
   searchPlaceholder = "Search...",
-  searchQuery,
+  searchQuery = "",
   onSearchChange,
 }) => {
   const user = useUserStore((state) => state.user);
+  const debouncedSearch = useDebounce(searchQuery, 600);
+
+  // ✅ Log only after debounce delay
+  useEffect(() => {
+    if (debouncedSearch.trim() !== "") {
+      console.log("🔍 Debounced search:", debouncedSearch);
+    }
+  }, [debouncedSearch]);
 
   return (
     <header className="bg-white border-b px-4 lg:px-6 py-4">
@@ -49,7 +59,6 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
 export default DashboardHeader;
 
-
 interface DashboardHeaderProps {
   title?: string;
   subtitle?: string;
@@ -57,3 +66,4 @@ interface DashboardHeaderProps {
   searchQuery?: string;
   onSearchChange?: (value: string) => void;
 }
+

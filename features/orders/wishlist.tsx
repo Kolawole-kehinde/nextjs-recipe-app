@@ -8,18 +8,18 @@ import DashboardHeader from "../dashboard/dashbord-header";
 import { RecommendedDishes } from "@/components/LadingPage/RecommendedDishes";
 import { useWishlist, useToggleWishlist, useAddToCart } from "@/hooks/useCart";
 import { notify } from "@/helpers/notifications";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export function WishlistItems() {
   const wishlist = useWishlist();
   const toggleWishlist = useToggleWishlist();
   const addToCart = useAddToCart();
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 600);
 
-  // ✅ Log each time search changes
-  useEffect(() => {
-    console.log("Wishlist search input:", search);
-  }, [search]);
+  // ✅ Log only after debounce delay
+  console.log("💖 Debounced Wishlist search:", debouncedSearch);
 
   const handleRemove = (food: any) => {
     toggleWishlist(food);
@@ -32,11 +32,11 @@ export function WishlistItems() {
   };
 
   const filteredWishlist = useMemo(() => {
-    if (!search.trim()) return wishlist;
+    if (!debouncedSearch.trim()) return wishlist;
     return wishlist.filter((item) =>
-      item.name.toLowerCase().includes(search.toLowerCase())
+      item.name.toLowerCase().includes(debouncedSearch.toLowerCase())
     );
-  }, [wishlist, search]);
+  }, [wishlist, debouncedSearch]);
 
   return (
     <div className="flex-1 flex flex-col">

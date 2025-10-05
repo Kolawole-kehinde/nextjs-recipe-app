@@ -3,24 +3,23 @@
 import { OrdersTabs } from "./order-tabs";
 import DashbordHeader from "../dashboard/dashbord-header";
 import { useOrder } from "@/hooks/useOrders";
-import { useState, useMemo, useEffect } from "react";
-import { AnyCaaRecord } from "node:dns";
+import { useState, useMemo } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export function MainContent() {
   const { orders, isLoading } = useOrder();
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 600);
 
-  // ✅ Log what you type
-  useEffect(() => {
-    console.log("Orders search input:", search);
-  }, [search]);
+  // ✅ Log only after debounce delay
+  console.log("🕓 Debounced Orders search:", debouncedSearch);
 
   const filteredOrders = useMemo(() => {
-    if (!search.trim()) return orders;
-    return orders?.filter((order: AnyCaaRecord) =>
-      order.id.toLowerCase().includes(search.toLowerCase())
+    if (!debouncedSearch.trim()) return orders;
+    return orders?.filter((order: any) =>
+      order.id.toLowerCase().includes(debouncedSearch.toLowerCase())
     );
-  }, [orders, search]);
+  }, [orders, debouncedSearch]);
 
   return (
     <div className="flex-1 flex flex-col">
