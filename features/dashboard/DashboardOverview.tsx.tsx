@@ -19,7 +19,7 @@ export function DashboardOverview() {
 
   return (
     <div className="flex-1 flex flex-col">
-      <DashbordHeader />
+      <DashbordHeader title="Dashboard" />
       <main className="flex-1 p-4 lg:p-6">
         <div className="space-y-4 lg:space-y-6">
 

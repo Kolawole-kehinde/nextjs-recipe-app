@@ -1,12 +1,31 @@
-"use client"
+"use client";
 
-import { OrdersTabs } from "./order-tabs"
-import DashbordHeader from "../dashboard/dashbord-header"
+import { OrdersTabs } from "./order-tabs";
+import DashbordHeader from "../dashboard/dashbord-header";
+import { useOrder } from "@/hooks/useOrders";
+import { useState, useMemo } from "react";
+import { AnyCaaRecord } from "node:dns";
 
 export function MainContent() {
+  const { orders, isLoading } = useOrder();
+  const [search, setSearch] = useState("");
+
+  const filteredOrders = useMemo(() => {
+    if (!search.trim()) return orders;
+    return orders?.filter((order: AnyCaaRecord) =>
+      order.id.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [orders, search]);
+
   return (
     <div className="flex-1 flex flex-col">
-      <DashbordHeader/>
+      <DashbordHeader
+        title="My Orders"
+        searchPlaceholder="Search orders..."
+        searchQuery={search}
+        onSearchChange={setSearch}
+      />
+
       <main className="flex-1 p-4 lg:p-6">
         <div className="space-y-4 lg:space-y-6">
           <div className="flex items-center gap-2">
@@ -16,9 +35,10 @@ export function MainContent() {
             <h1 className="text-xl lg:text-2xl font-bold text-gray-900">Orders</h1>
           </div>
 
-          <OrdersTabs />
+          {/* Pass filteredOrders to your tabs if needed */}
+          <OrdersTabs orders={filteredOrders} isLoading={isLoading} />
         </div>
       </main>
     </div>
-  )
+  );
 }
