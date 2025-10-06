@@ -27,10 +27,10 @@ const AuthMenu: React.FC<AuthMenuProps> = ({ closeMenu, orderId }) => {
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   return (
-    <div className="absolute right-0 mt-2 w-44 bg-white rounded-md shadow-lg py-2 z-50">
+    <div className="absolute right-0 mt-2 w-44 bg-white rounded-md shadow-lg py-2 z-50 md:hidden">
       {user ? (
         <>
-          <div className="px-4 py-2 text-gray-700 font-semibold">
+          <div className="flex md:hidden px-4 py-2 text-gray-700 font-semibold">
             Hello, {user?.name || "User"}!
           </div>
 
