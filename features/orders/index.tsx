@@ -13,7 +13,6 @@ export function MainContent() {
 
   // ✅ Log only after debounce delay
   console.log("🕓 Debounced Orders search:", debouncedSearch);
-
   const filteredOrders = useMemo(() => {
     if (!debouncedSearch.trim()) return orders;
     return orders?.filter((order: any) =>
@@ -25,6 +24,7 @@ export function MainContent() {
     <div className="flex-1 flex flex-col">
       <DashbordHeader
         title="My Orders"
+        subtitle="Track and manage your recent purchases."
         searchPlaceholder="Search orders..."
         searchQuery={search}
         onSearchChange={setSearch}

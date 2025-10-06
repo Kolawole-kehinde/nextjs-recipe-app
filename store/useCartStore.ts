@@ -1,11 +1,11 @@
 // /store/cartStore.ts
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { CartItem, FavoriteItem, BuyNowItem } from "@/types/cart";
+import { CartItem, WishlistItem, BuyNowItem } from "@/types/cart";
 
 interface CartState {
   cartItems: CartItem[];
-  wishlists: FavoriteItem[];
+  wishlists: WishlistItem[];
   buyNow: BuyNowItem | null;
 
   // Cart Actions
@@ -14,7 +14,8 @@ interface CartState {
   clearCart: () => void;
 
   // Wishlist Actions
-  toggleWishlist: (item: FavoriteItem) => void;
+  toggleWishlist: (item: WishlistItem) => void;
+  clearWishlist: () => void;
 
   // BuyNow Actions
   setBuyNow: (item: BuyNowItem | null) => void;
@@ -55,6 +56,8 @@ export const useCartStore = create<CartState>()(
             : { wishlists: [...state.wishlists, item] };
         }),
 
+      clearWishlist: () => set({ wishlists: [] }),
+      
       setBuyNow: (item) => set({ buyNow: item }),
     }),
     { name: "cart-storage" }

@@ -10,7 +10,7 @@ const Footer = ({ orderId }: { orderId?: string }) => {
   const { mutate: logout, isPending } = useLogout();
 
   return (
-    <footer className="bg-black text-white text-sm lg:px-16 mt-10">
+    <footer className="bg-black text-white text-sm lg:px-16">
       {/* Top Section */}
       <div className="wrapper px-4 flex flex-col lg:flex-row items-start justify-between py-8 gap-8">
         {/* Left Section */}

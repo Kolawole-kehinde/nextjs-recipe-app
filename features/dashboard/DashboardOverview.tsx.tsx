@@ -35,7 +35,7 @@ export function DashboardOverview() {
       <main className="flex-1 p-4 lg:p-6">
         <div className="space-y-4 lg:space-y-6">
           {/* Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6 overflow-x-auto">
             {/* Total Orders */}
             <Card className="bg-[#dbeafe]">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

@@ -5,7 +5,7 @@ import { WishlistItems } from "@/features/orders/wishlist"
 const WishlistPage = () => {
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
+      {/* <Sidebar /> */}
       <WishlistItems />
     </div>
   )

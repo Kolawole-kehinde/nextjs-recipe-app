@@ -25,7 +25,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   }, [debouncedSearch]);
 
   return (
-    <header className="bg-white border-b px-4 lg:px-6 py-4">
+    <header className="bg-white border-b px-4 lg:px-6 py-8 mx-6">
       <div className="flex flex-col md:flex-row items-center justify-between">
         <div>
           <h1 className="text-xl lg:text-2xl font-bold text-gray-900">{title}</h1>

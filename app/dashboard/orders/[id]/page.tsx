@@ -11,7 +11,7 @@ interface OrderDetailsPageProps {
 export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
+      {/* <Sidebar /> */}
       <OrderDetailsContent orderId={params.id} />
     </div>
   )

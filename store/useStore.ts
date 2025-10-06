@@ -1,4 +1,3 @@
-// /store/userStore.ts
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -25,8 +24,9 @@ const useUserStore = create<UserState>()(
           state.user = null;
         });
 
-        // 👇 clear cart when user logs out
+        // 👇 clear cart and wishlist when user logs out
         useCartStore.getState().clearCart();
+        useCartStore.getState().clearWishlist();
       },
     })),
     {

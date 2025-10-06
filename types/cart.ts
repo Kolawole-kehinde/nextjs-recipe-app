@@ -25,7 +25,7 @@ export type CartItem = {
 };
 
 
-export interface FavoriteItem {
+export interface WishlistItem {
   id: string;
   name: string;
   price: number;
